@@ -1,0 +1,64 @@
+#TITLE:Los pollitos dicen
+#ARTIST:Tradicional (adaptación de ejemplo)
+#LANGUAGE:Spanish
+#GENRE:Infantil
+#MP3:
+#BPM:100
+#GAP:2400
+#CREATOR:Karaoke facial (ejemplo)
+: 0 3 0 Los
+: 4 3 2  po
+: 8 3 4 lli
+: 12 3 5 tos
+: 16 3 7  di
+: 20 7 7 cen
+- 30
+: 32 3 9 pí
+: 36 3 9 o,
+: 40 3 9  pí
+: 44 3 9 o,
+: 48 3 7  pí
+: 52 7 7 o
+- 62
+: 64 3 5 cuan
+: 68 3 5 do
+: 72 3 5  tie
+: 76 3 5 nen
+: 80 3 4  ham
+: 84 7 4 bre
+- 94
+: 96 3 2 cuan
+: 100 3 2 do
+: 104 3 2  tie
+: 108 3 2 nen
+: 112 3 0  frí
+* 116 7 0 o
+- 126
+: 128 3 0 La
+: 132 3 2  ga
+: 136 3 4 lli
+: 140 3 5 na
+: 144 3 7  bus
+: 148 7 7 ca
+- 158
+: 160 3 9 el
+: 164 3 9  ma
+: 168 3 9 íz
+: 172 3 9  y el
+: 176 3 7  tri
+: 180 7 7 go
+- 190
+: 192 3 5 les
+: 196 3 5  da
+: 200 3 5  la
+: 204 3 5  co
+: 208 3 4 mi
+: 212 7 4 da
+- 222
+: 224 3 2 y les
+: 228 3 2  pres
+: 232 3 2 ta a
+: 236 3 2 bri
+: 240 3 0 go
+* 244 7 0 ~
+E

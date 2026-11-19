@@ -1,0 +1,5 @@
+# Netlify: publishes the repository as it is (no bundling). The build step only writes drive-config.js from the
+# DRIVE_API_KEY and DRIVE_FOLDER_ID environment variables (Site configuration → Environment variables).
+[build]
+  publish = "."
+  command = "node tools/netlify-build.cjs"

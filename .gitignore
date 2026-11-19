@@ -1,0 +1,26 @@
+# Songs: only the public-domain demos are part of the repository. Any other song copied
+# into songs/ (and every audio track) stays on your own computer.
+songs/*
+!songs/README.md
+!songs/Los pollitos dicen/
+!songs/Twinkle, Twinkle, Little Star/
+!songs/Himno Nacional Argentino - Blas Parera/
+songs/*/*.mp3
+songs/*/*.ogg
+songs/*/*.m4a
+songs/*/*.wav
+songs/*/*.mp4
+songs/*/*.webm
+songs/list.js
+
+# Generated files
+drive-config.js
+web-version/
+audio/
+node_modules/
+*.zip
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini

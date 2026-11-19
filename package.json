@@ -1,0 +1,18 @@
+{
+  "name": "cara-o-que",
+  "version": "0.9.0",
+  "private": true,
+  "description": "Face-controlled karaoke for laryngectomized people (Archivoz project)",
+  "license": "MIT",
+  "author": "Simón",
+  "type": "module",
+  "scripts": {
+    "start": "node tools/server.cjs --open",
+    "server": "node tools/server.cjs",
+    "test": "node tests/run-tests.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "comment": "The server (tools/server.cjs) works from Node 6 on; the tests and tools need Node 18 or newer."
+}
