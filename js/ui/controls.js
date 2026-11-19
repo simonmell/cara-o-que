@@ -51,17 +51,18 @@ export const RANGES = {
 // Sets every control on the page to the value in S.settings.
 export function syncControls() {
   const st = S.settings;
-  for (const k of ['timing', 'pitchMode', 'tol', 'volMode', 'register', 'tract', 'cons', 'vowels', 'consSrc', 'songLang']) $(k).value = st[k];
+  for (const k of ['pitchMode', 'tol', 'volMode', 'register', 'tract', 'cons', 'vowels', 'consSrc', 'songLang']) $(k).value = st[k];
   for (const k of Object.keys(RANGES)) { $(k).value = st[k]; $(k + 'Val').textContent = RANGES[k](st[k]); }
   for (const k of ['pulse', 'quantize', 'guide', 'showScore']) $(k).checked = !!st[k];
   for (const r of document.querySelectorAll('input[name="level"]')) r.checked = r.value === st.level;
+  for (const r of document.querySelectorAll('input[name="timing"]')) r.checked = r.value === st.timing;
   $('volSens').disabled = st.volMode !== 'proximity';
   updateScore();
 }
 
 // Settings, player, voice and advanced settings
 export function wireControls() {
-  for (const k of ['timing', 'pitchMode', 'tol', 'volMode', 'register', 'tract', 'cons', 'vowels', 'consSrc', 'songLang']) {
+  for (const k of ['pitchMode', 'tol', 'volMode', 'register', 'tract', 'cons', 'vowels', 'consSrc', 'songLang']) {
     $(k).addEventListener('change', () => {
       S.settings[k] = $(k).value;
       if (k === 'songLang') relang();
@@ -86,6 +87,10 @@ export function wireControls() {
     });
   }
   for (const r of document.querySelectorAll('input[name="level"]')) r.addEventListener('change', () => applyLevel(r.value));
+  // Practice / continuous (visible card)
+  for (const r of document.querySelectorAll('input[name="timing"]')) {
+    r.addEventListener('change', () => { S.settings.timing = r.value; syncControls(); saveStore(); });
+  }
 
   $('playBtn').addEventListener('click', () => (S.playing ? pause() : play()));
   $('restartBtn').addEventListener('click', () => { resetPlayback(); play(); });

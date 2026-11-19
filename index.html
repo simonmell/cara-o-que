@@ -66,7 +66,8 @@
         <ul>
           <li data-t="w.set1"><b>Nivel:</b> del 1 (solo abrir la boca a tiempo) al 4 (vocal, nota, volumen y consonantes a cargo tuyo). Conviene empezar por el 1 o el 2 y subir.</li>
           <li data-t="w.set2"><b>Volumen:</b> el de tu voz y el de la música, por separado.</li>
-          <li data-t="w.set3"><b>Puntaje:</b> mostralo para jugar u ocultalo para practicar sin calificación.</li>
+          <li data-t="w.set3"><b>Práctica o continuo:</b> en práctica la canción espera a que cantes cada sílaba; en continuo sigue sin detenerse, como un karaoke.</li>
+          <li data-t="w.set3b"><b>Puntaje:</b> arriba a la derecha de la pista. Con el interruptor lo mostrás para jugar o lo ocultás para practicar sin calificación.</li>
           <li data-t="w.set4">Las <b>barras de colores</b> bajo la cámara muestran qué vocal está leyendo en tu boca: sirven para comprobar que la calibración quedó bien.</li>
         </ul>
       </section>
@@ -142,6 +143,12 @@
     <section class="panel lane" aria-label="Pista de notas y letra" data-t-aria="lanePanel">
       <div class="lanehead">
         <div class="meta" id="songMeta"></div>
+        <div class="scorepill">
+          <label class="switch" title="Apagado, la pista solo guía: se ve el rastro de tu voz sin calificación." data-t-title="scoreHint">
+            <input type="checkbox" id="showScore" role="switch"><span class="track" aria-hidden="true"></span><span data-t="score">Puntaje</span>
+          </label>
+          <span class="scorenum" id="scoreBox" hidden><b id="scoreNum">0</b>/100</span>
+        </div>
       </div>
       <div class="lanecv" id="lanecv" aria-label="Pista de notas. Mantené apretado para cantar con el pulsador." data-t-aria="laneAria">
         <canvas id="lane"></canvas>
@@ -187,10 +194,12 @@
     </fieldset>
 
     <fieldset class="panel">
-      <legend data-t="score">Puntaje</legend>
-      <label class="check"><input type="checkbox" id="showScore"> <span data-t="showScore">Mostrar puntaje</span></label>
-      <div class="score" id="scoreBox" hidden><span class="big" id="scoreNum">0</span><span class="of" data-t="scoreOf">de 100<br>promedio de las notas cantadas</span></div>
-      <p class="hint" data-t="scoreHint">Apagado, la pista solo guía: se ve el rastro de tu voz sin calificación.</p>
+      <legend data-t="timing">Cómo avanza la canción</legend>
+      <div class="levels modes">
+        <label><input type="radio" name="timing" value="practice"><b data-t="tm.practice">Práctica</b><small data-t="tm.practiceD">La canción espera a que cantes cada sílaba.</small></label>
+        <label><input type="radio" name="timing" value="strict"><b data-t="tm.strict">Continuo</b><small data-t="tm.strictD">La música sigue aunque no cantes, como en un karaoke.</small></label>
+      </div>
+      <p class="hint" data-t="timingHint">Para aprender una canción conviene Práctica; para cantarla de corrido, Continuo.</p>
     </fieldset>
   </section>
 
@@ -201,8 +210,6 @@
   <section class="settings" id="advanced" aria-label="Ajustes avanzados" data-t-aria="advanced" hidden>
     <fieldset class="panel">
       <legend data-t="timeT">Tiempo</legend>
-      <div class="field"><label for="timing" data-t="timing">Cómo avanza la canción</label>
-        <select id="timing"><option value="practice" data-t="timing.practice">Práctica: espera a que cantes cada sílaba</option><option value="strict" data-t="timing.strict">Continuo: la música no se detiene</option></select></div>
       <div class="field"><label for="speed"><span data-t="speed">Velocidad</span> <span class="val" id="speedVal"></span></label><input type="range" id="speed" min="0.5" max="1" step="0.05"></div>
       <div class="field"><label for="latency"><span data-t="latency">Compensar demora de la cámara</span> <span class="val" id="latencyVal"></span></label><input type="range" id="latency" min="0" max="300" step="10"></div>
       <label class="check"><input type="checkbox" id="pulse"> <span data-t="pulse">Marcar el pulso</span></label>

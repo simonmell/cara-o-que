@@ -1,18 +1,29 @@
 // Song list: the drop-down, loading a song with its music, and the song sources (the folder
 // chosen by hand, songs/list.js built by the local server, a shared Google Drive folder, or the server's folder listing).
+// The demo songs always stay at the end of the list. Songs from Google Drive are listed by name only, and a song is
+// downloaded when it is chosen.
 
 import { renderMeta, setSong } from './current-song.js';
 import { paintSeekTrack } from '../playback/player.js';
-import { $, S, toast } from '../state.js';
+import { $, DEMO_SONGS, S, toast } from '../state.js';
 import { t } from '../i18n/language.js';
 import { DRIVE_API_KEY, DRIVE_FOLDER_ID } from '../config.js';
 import { groupSongFolders, parseUltraStar, songAssets } from '../logic/ultrastar.js';
 
 export const sel = $('songSel');
-// Fills the drop-down with the songs in S.songs and selects the one at index selIdx.
+// Fills the drop-down with the songs in S.songs and selects the one at index selIdx. When there are songs besides
+// the demos, they are shown in two groups: «Your songs» and «Examples».
 export const fillSongs = (selIdx) => {
   sel.innerHTML = '';
-  S.songs.forEach((s, i) => { const o = document.createElement('option'); o.value = i; o.textContent = s.nameKey ? t(s.nameKey) : s.name; sel.append(o); });
+  const option = (s, i) => { const o = document.createElement('option'); o.value = i; o.textContent = s.nameKey ? t(s.nameKey) : s.name; return o; };
+  if (S.songs.every((s) => s.demo)) S.songs.forEach((s, i) => sel.append(option(s, i)));
+  else {
+    for (const [label, demo] of [['songsOwn', false], ['songsDemo', true]]) {
+      const group = document.createElement('optgroup'); group.label = t(label);
+      S.songs.forEach((s, i) => { if (!!s.demo === demo) group.append(option(s, i)); });
+      sel.append(group);
+    }
+  }
   sel.value = selIdx;
 };
 
@@ -28,13 +39,34 @@ export const setAudio = (src) => {
   }
   paintSeekTrack();
 };
-// Loads the chosen song: its lyrics and notes and its music.
-export const selectSong = (i) => {
-  const entry = S.songs[i];
+// Entry of the song that is loaded now (at startup, the first demo song, which main.js loads)
+let current = DEMO_SONGS[0];
+let selecting = 0;   // counts selections, so a slow download does not replace a song chosen after it
+// Loads the chosen song: its lyrics and notes and its music. An entry with load() (Google Drive) is downloaded first;
+// a folder with several UltraStar .txt files becomes several entries.
+export async function selectSong(i) {
+  let entry = S.songs[i];
+  const ticket = ++selecting;
+  if (entry.load) {
+    toast(t('songLoading', entry.name));
+    let songs = [], err = null;
+    try { songs = await entry.load(); } catch (e) { err = e; console.warn('Song', entry.name, e); }
+    if (ticket !== selecting) return;
+    if (!songs.length) {
+      if (!err) S.songs.splice(i, 1);           // not a song: take it off the list
+      fillSongs(Math.max(0, S.songs.indexOf(current)));
+      toast(err ? t('driveFail') + ' (' + err.message + ')' : t('songNotFound', entry.name));
+      return;
+    }
+    S.songs.splice(i, 1, ...songs);
+    fillSongs(i);
+    entry = songs[0];
+  }
+  current = entry;
   setSong(entry.text);
   setAudio(entry.files?.play || null);
   S.songEntry = entry; renderMeta();
-};
+}
 
 // Text of an UltraStar .txt: UTF-8 or, if it is not, Windows-1252.
 export const decodeText = (buf) => {
@@ -45,7 +77,8 @@ export const decodeText = (buf) => {
 // music (the audio named in the .txt, or the only audio file), it is loaded with the lyrics; if it only has the .txt,
 // it is sung without a backing track. .txt files that are not UltraStar (readme, loose lyrics) are ignored.
 // folders: [{ name, dir, loose, files: [{ name, size, read: () => Promise<ArrayBuffer>, src: File | url }] }]
-export async function loadSongFolders(folders, { quiet = false } = {}) {
+// Returns { found: song entries, skipped: names of the folders without an UltraStar .txt }.
+export async function readSongFolders(folders) {
   const found = []; const skipped = [];
   for (const d of folders) {
     const names = d.files.map((f) => f.name);
@@ -68,14 +101,24 @@ export async function loadSongFolders(folders, { quiet = false } = {}) {
       });
     }
   }
-  found.sort((x, y) => x.name.localeCompare(y.name, 'es', { sensitivity: 'base' }));
-  if (!found.length) { if (!quiet) toast(t('noSongs')); return false; }
-  S.songs = found;
-  fillSongs(0);
-  selectSong(0);
-  const withMusic = found.filter((x) => x.files.play).length;
-  toast(t('found', found.length, withMusic) + (skipped.length ? t('skipped', skipped.join(', ')) : ''));
+  found.sort(byName);
+  return { found, skipped };
+}
+const byName = (x, y) => x.name.localeCompare(y.name, 'es', { sensitivity: 'base' });
+// Puts the songs in the list, before the demo songs. select: load the first one; otherwise the current song stays.
+function showSongs(songs, message, select) {
+  S.songs = [...songs, ...DEMO_SONGS];
+  const keep = S.songs.indexOf(current);
+  if (select || keep < 0) { fillSongs(0); selectSong(0); } else fillSongs(keep);
+  toast(message);
   $('songHint').hidden = true;
+}
+// Reads the folders and shows their songs, loading the first one.
+export async function loadSongFolders(folders, { quiet = false } = {}) {
+  const { found, skipped } = await readSongFolders(folders);
+  if (!found.length) { if (!quiet) toast(t('noSongs')); return false; }
+  const withMusic = found.filter((x) => x.files.play).length;
+  showSongs(found, t('found', found.length, withMusic) + (skipped.length ? t('skipped', skipped.join(', ')) : ''), true);
   return true;
 }
 
@@ -157,28 +200,40 @@ async function driveList(folderId, key) {
   } while (page);
   return items;
 }
-// Last error while downloading a file from Drive (loadSongFolders skips unreadable files silently)
-let driveReadError = null;
-// Builds the song folders from Drive. The audio plays straight from Drive (the API supports byte ranges, so seeking works).
-export async function fromDrive(folderId, key) {
+// Song list of a Drive folder, without downloading anything but the list of the main folder: one entry per subfolder
+// (and per loose .txt), with load() to download it when it is chosen. The audio plays straight from Drive (the API
+// supports byte ranges, so seeking works).
+export async function driveCatalog(folderId, key) {
   const media = (f) => `${DRIVE_API}/${f.id}?alt=media&key=${key}`;
-  const mk = (dir, files) => ({
-    name: dir || 'Google Drive', dir, loose: !dir,
-    files: files.filter((f) => f.mimeType !== FOLDER_MIME).map((f) => ({
-      name: f.name, size: Number(f.size) || 0, src: media(f),
-      read: async () => {
-        try {
-          const r = await fetch(media(f)); if (!r.ok) throw await driveError(r);
-          return await r.arrayBuffer();
-        } catch (err) { driveReadError = err; console.warn('Google Drive', f.name, err); throw err; }
-      },
-    })),
+  let readError = null;   // readSongFolders skips unreadable files silently: this keeps the reason
+  const fileOf = (f) => ({
+    name: f.name, size: Number(f.size) || 0, src: media(f),
+    read: async () => {
+      try {
+        const r = await fetch(media(f)); if (!r.ok) throw await driveError(r);
+        return await r.arrayBuffer();
+      } catch (err) { readError = err; throw err; }
+    },
   });
+  // Reads one song folder; if no song could be read because of a download error, throws that error
+  const read = async (folder) => {
+    readError = null;
+    const { found } = await readSongFolders([folder]);
+    if (!found.length && readError) throw readError;
+    return found;
+  };
   const top = await driveList(folderId, key);
-  const subfolders = top.filter((f) => f.mimeType === FOLDER_MIME);
-  const folders = [mk('', top)];
-  folders.push(...await Promise.all(subfolders.map(async (d) => mk(d.name, await driveList(d.id, key)))));
-  return folders.filter((d) => d.files.length);
+  const files = top.filter((f) => f.mimeType !== FOLDER_MIME);
+  const isTxt = (f) => /\.txt$/i.test(f.name);
+  const entries = top.filter((f) => f.mimeType === FOLDER_MIME).map((d) => ({
+    name: d.name,
+    load: async () => read({ name: d.name, dir: d.name, loose: false, files: (await driveList(d.id, key)).filter((f) => f.mimeType !== FOLDER_MIME).map(fileOf) }),
+  }));
+  // loose .txt files in the main folder (except a readme), each with the audio files next to it
+  for (const f of files.filter((x) => isTxt(x) && !/^(readme|l[eé]eme)/i.test(x.name))) {
+    entries.push({ name: f.name.replace(/\.txt$/i, ''), load: () => read({ name: 'Google Drive', dir: '', loose: true, files: [f, ...files.filter((x) => !isTxt(x))].map(fileOf) }) });
+  }
+  return entries.sort(byName);
 }
 
 // List startup: demo songs, drop-down changes, folder chosen by hand and automatic list
@@ -196,18 +251,17 @@ export function wireSongLibrary() {
       ...d, files: d.files.map((i) => ({ name: files[i].name, size: files[i].size, read: () => files[i].arrayBuffer(), src: files[i] })),
     })));
   });
-  // 3) Google Drive (see docs/google-drive.md)
+  // 3) Google Drive (see docs/google-drive.md): only the list; each song is downloaded when it is chosen
   const loadDrive = async () => {
     if (!window.KARAOKE_DRIVE) await loadScript('drive-config.js');
     const id = driveFolderId(), key = driveKey();
     if (!id || !key) return false;
     try {
       toast(t('reading'));
-      driveReadError = null;
-      if (await loadSongFolders(await fromDrive(id, key), { quiet: true })) return true;
-      // the folder was listed but no song could be read: say why
-      toast(driveReadError ? t('driveFail') + ' (' + driveReadError.message + ')' : t('noSongs'));
-      return false;
+      const songs = await driveCatalog(id, key);
+      if (!songs.length) { toast(t('noSongs')); return false; }
+      showSongs(songs, t('driveFound', songs.length), false);
+      return true;
     } catch (err) { console.warn('Google Drive', err); toast(t('driveFail') + ' (' + err.message + ')'); return false; }
   };
   (async () => {

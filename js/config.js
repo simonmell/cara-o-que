@@ -22,5 +22,5 @@ export const DEFAULTS = {
   tol: 'amplia', volMode: 'proximity', volSens: 2.5,
   register: '0', voiceVol: 0.8, musicVol: 0.8, guide: true,
   tension: 0.5, breath: 0.05, tract: '0.36', cons: 'auto', vowels: 'cd', consSrc: 'auto',
-  showScore: false, songLang: 'auto',
+  showScore: true, songLang: 'auto',
 };

@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- The score is always at the top right of the note track, with a small on/off switch (on by default).
+- Practice / Continuous is now one of the main settings cards, instead of an advanced setting.
+- Google Drive: the page only reads the list of song folders at startup; each song is downloaded when it is chosen.
+- The demo songs stay in the list (under «Examples») after other songs are loaded.
+
 ## 0.9.0 (November 2026)
 
 - Code split into ES modules (`js/`), styles (`css/`) and data (`data/`); the single-file version and its build

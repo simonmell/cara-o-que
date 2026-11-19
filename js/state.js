@@ -8,10 +8,15 @@ import { defaultModel } from './logic/vowels.js';
 
 // ---------------- Estado ----------------
 export const $ = (id) => document.getElementById(id);
+// Demo songs included in the app: they stay in the list after other songs are loaded.
+export const DEMO_SONGS = [
+  { name: 'Los pollitos dicen (ejemplo)', nameKey: 'demoName', text: DEMO_SONG, demo: true },
+  { name: 'Twinkle, Twinkle, Little Star', nameKey: 'demoEnName', text: DEMO_SONG_EN, demo: true },
+];
 export const S = {
   settings: { ...DEFAULTS },
   model: defaultModel(),
-  songs: [{ name: 'Los pollitos dicen (ejemplo)', nameKey: 'demoName', text: DEMO_SONG }, { name: 'Twinkle, Twinkle, Little Star', nameKey: 'demoEnName', text: DEMO_SONG_EN }],
+  songs: DEMO_SONGS.slice(),
   song: null, songMidis: [], accs: [], trace: [],
   playing: false, ended: false, t: 0, prevT: 0, waiting: false, lastNow: 0,
   audioEl: null, audioUrl: null, voiceOn: true,

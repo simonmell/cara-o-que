@@ -44,7 +44,7 @@ The first time, the browser downloads MediaPipe and the face model (about 4 MB).
 - **Camera:** open your mouth to make the voice sound; its shape picks the vowel; raise or lower your head to change the note; move closer to sing louder.
 - **Switch:** hold the space bar or touch the lane to sing the expected vowel; `A E I O U` sing that vowel. An adapted switch that emulates the space bar works too.
 - **Player:** `P` play/pause, `←` `→` 5 s back/forward, `Home` back to the start, «Skip intro». `V` mutes the voice without turning off the camera.
-- **Level** sets how much help you get (pitch assist, vowel tolerance, how consonants are triggered). Everything else is under «Show advanced settings».
+- **Level** sets how much help you get (pitch assist, vowel tolerance, how consonants are triggered), and **Practice / Continuous** whether the song waits for you to sing each syllable. The score is at the top right of the note track, with a switch to hide it. Everything else is under «Show advanced settings».
 
 ## Songs
 

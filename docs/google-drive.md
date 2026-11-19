@@ -5,7 +5,10 @@ uploading them to Drive, without publishing the site again. Nobody has to sign i
 Drive API and an API key.
 
 The folder uses the same layout as `songs/`: one subfolder per song, with the UltraStar `.txt` and, optionally, the
-backing track. The audio plays straight from Drive, and seeking works.
+backing track. At startup the page only reads the list of subfolders and shows their names; a song's `.txt` is
+downloaded when it is chosen in the list, and its audio plays straight from Drive (seeking works). So a folder with
+many songs opens just as fast as one with a few. A subfolder without an UltraStar `.txt` is taken off the list when
+someone picks it.
 
 ```
 Cara-o-que songs/                  ← shared with «Anyone with the link»
@@ -61,7 +64,8 @@ The `?drive=` parameter also works on the published site, to try another folder 
 3. The Drive folder from `drive-config.js` (or `DRIVE_API_KEY` / `DRIVE_FOLDER_ID` in `js/config.js`).
 4. The http server's folder listing, if there is one.
 
-If none of them has songs, the two demo songs included in the app are used. «Load song folder» always works.
+The first one that has songs is used, and the demo songs included in the app always stay at the end of the list
+(under «Examples»). «Load song folder» always works.
 
 ## Notes
 
@@ -69,4 +73,6 @@ If none of them has songs, the two demo songs included in the app are used. «Lo
   the other songs. The details are in the browser console.
 - Anyone who can open the site can reach the files in the folder. For copyrighted songs, limit who can open the site
   (see [publishing.md](publishing.md)).
-- Google limits how often a public file can be downloaded. For a handful of testers this is not a problem.
+- The Drive API does not cost anything, and the files go from Google straight to the browser, so they do not use the
+  bandwidth of the site (Netlify or other). Google limits how often a public file can be downloaded; for a handful
+  of testers this is not a problem.
