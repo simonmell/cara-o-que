@@ -1,6 +1,5 @@
-// Page audio engine: the Web Audio context with its two buses (voice and music), the parametric voice
-// (CantorVoice, which sends parameters to the AudioWorklet), the simple fallback voice (FormantVoice) for browsers
-// without AudioWorklet, the melody guide and the beat.
+// Web Audio setup: voice and music buses, the AudioWorklet voice, a simple fallback voice, melody
+// guide and beat.
 
 import { S, toast } from '../state.js';
 import { t } from '../i18n/language.js';
@@ -11,8 +10,8 @@ import { decodeConsSamples } from './consonant-samples.js';
 export let ctx = null, master = null, voiceBus = null, musicBus = null, voice = null, formantVoice = null, cantorVoice = null;
 // The parametric voice is the karaoke's voice; the simple formant voice only plays if the browser does not support AudioWorklet.
 export const pickVoice = () => cantorVoice || formantVoice;
-// «soprano»: vowels measured by Barrientos and Cataldo (2021) on high notes, with their 4.5 Hz vibrato
-// Recorded consonants: «auto» picks the female voice with a small vocal tract or soprano vowels, the male voice otherwise
+// "soprano": vowels measured by Barrientos and Cataldo (2021) on high notes, with their 4.5 Hz vibrato
+// Recorded consonants: "auto" picks the female voice with a small vocal tract or soprano vowels, the male voice otherwise
 export const consSet = () => {
   const c = S.settings.consSrc;
   if (c === 'synth') return '';
@@ -64,7 +63,7 @@ export function ensureAudio() {
 export class CantorVoice {
   static async create(c, out) {
     // The processor lives in its own file and is loaded as an AudioWorklet module (the page must be served
-    // over http: «Open karaoke.bat» starts a local server; the web version is already served over https).
+    // over http: "Open karaoke.bat" starts a local server; the web version is already served over https).
     await c.audioWorklet.addModule(new URL('./cantor-dsp.js', import.meta.url));
     const node = new AudioWorkletNode(c, 'cantor-voice', { numberOfInputs: 0, outputChannelCount: [1] });
     node.connect(out);

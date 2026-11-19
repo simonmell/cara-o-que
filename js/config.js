@@ -1,5 +1,4 @@
-// General configuration: where MediaPipe and its face model are downloaded from, the key under which the settings
-// are stored in the browser, and the initial value of every setting.
+// MediaPipe URLs, storage key and default settings.
 
 export const MP_VERSION = '0.10.21';
 export const MP_URL = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VERSION}/vision_bundle.mjs`;
@@ -8,8 +7,8 @@ export const MP_WASM = `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${M
 export const MODEL_URL = 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task';
 export const STORE_KEY = 'karaoke-facial-v1';
 
-// Songs from a Google Drive folder (see docs/google-drive.md). The folder must be shared as «anyone with the
-// link can view», with one subfolder per song. Leave them empty to use only the local songs folder.
+// Songs from a Google Drive folder (see docs/google-drive.md). The folder must be shared as "anyone with the
+// link can view", with one subfolder per song. Leave them empty to use only the local songs folder.
 // It is better not to write the key here (it would end up on GitHub): on Netlify it comes from environment variables
 // through drive-config.js, which tools/netlify-build.cjs writes when the site is published.
 // The folder can also be chosen in the address: ...?drive=<folder ID>

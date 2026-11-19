@@ -7,7 +7,7 @@ The webcam reads the shape of your mouth (vowel), the height of your head (note)
 
 <br clear="left">
 
-![Cara-o-que playing «Twinkle, Twinkle, Little Star»](docs/screenshot.png)
+![Cara-o-que playing "Twinkle, Twinkle, Little Star"](docs/screenshot.png)
 
 **Try it online: https://cara-o-que.netlify.app/** (Chrome or Edge, with a webcam, or with the space bar if you don't have one).
 
@@ -18,7 +18,7 @@ Cara-o-que is part of **Archivoz**, a research project on a voice map of Argenti
 - **Face control** with [MediaPipe Face Landmarker](https://ai.google.dev/edge/mediapipe/solutions/vision/face_landmarker): mouth shape → vowel, head height → note, distance → volume. A short calibration adapts it to each person's mouth.
 - **Parametric singing voice** based on Cantor Digitalis, running in an `AudioWorklet`, with Spanish consonants (synthetic, plus recorded fragments of Rioplatense speakers from OpenSLR 61).
 - **UltraStar songs**: any folder with an UltraStar `.txt` (and optionally its karaoke track) becomes a song.
-- **Four assistance levels**, from «open your mouth on time» to free singing, with optional scoring.
+- **Four assistance levels**, from "open your mouth on time" to free singing, with optional scoring.
 - **No camera needed** to try it: the space bar, the `A E I O U` keys or touching the note lane work as a switch.
 - **Spanish and English interface**, and experimental support for English songs (CMU Pronouncing Dictionary + Hillenbrand vowels).
 - Everything runs in the browser. The camera image never leaves the computer.
@@ -35,7 +35,7 @@ You need [Node.js](https://nodejs.org/) (any version works to open the karaoke; 
 npm start          # same as: node tools/server.cjs --open
 ```
 
-Then press «Turn on camera», sit comfortably (the starting position is set automatically) and press «Start». «Calibrate vowels» takes six short steps and makes vowel detection much more reliable.
+Then press "Turn on camera", sit comfortably (the starting position is set automatically) and press "Start". "Calibrate vowels" takes six short steps and makes vowel detection much more reliable.
 
 The page has to be served over http because browsers do not load JavaScript modules or the `AudioWorklet` from `file://`. The server has no dependencies, only listens on `127.0.0.1`, and if port 8080 is taken (or reserved by Windows) it tries other ports, always in the same order.
 
@@ -45,8 +45,8 @@ The first time, the browser downloads MediaPipe and the face model (about 4 MB).
 
 - **Camera:** open your mouth to make the voice sound; its shape picks the vowel; raise or lower your head to change the note; move closer to sing louder.
 - **Switch:** hold the space bar or touch the lane to sing the expected vowel; `A E I O U` sing that vowel. An adapted switch that emulates the space bar works too.
-- **Player:** `P` play/pause, `←` `→` 5 s back/forward, `Home` back to the start, «Skip intro». `V` mutes the voice without turning off the camera.
-- **Level** sets how much help you get (pitch assist, vowel tolerance, how consonants are triggered), and **Practice / Continuous** whether the song waits for you to sing each syllable. The score is at the top right of the note track, with a switch to hide it. Everything else is under «Show advanced settings».
+- **Player:** `P` play/pause, `←` `→` 5 s back/forward, `Home` back to the start, "Skip intro". `V` mutes the voice without turning off the camera.
+- **Level** sets how much help you get (pitch assist, vowel tolerance, how consonants are triggered), and **Practice / Continuous** whether the song waits for you to sing each syllable. The score is at the top right of the note track, with a switch to hide it. Everything else is under "Show advanced settings".
 
 ## Songs
 
@@ -61,9 +61,9 @@ songs/
     my-song (karaoke).mp3             ← optional backing track
 ```
 
-The local server rebuilds the list every time the page loads, so a new folder shows up after a reload. You can also pick a folder by hand with «Load song folder», and the web version can read its songs from a shared Google Drive folder ([docs/google-drive.md](docs/google-drive.md)).
+The local server rebuilds the list every time the page loads, so a new folder shows up after a reload. You can also pick a folder by hand with "Load song folder", and the web version can read its songs from a shared Google Drive folder ([docs/google-drive.md](docs/google-drive.md)).
 
-This repository only includes public-domain songs: «Los pollitos dicen», «Twinkle, Twinkle, Little Star» and the Argentine National Anthem. Any other song you copy into `songs/`, and every audio file, is ignored by git and stays on your computer (see [`songs/README.md`](songs/README.md)). To write new songs, the UltraStar Play editor, the MuseScore plugin or UltraSinger are good options.
+This repository only includes public-domain songs: "Los pollitos dicen", "Twinkle, Twinkle, Little Star" and the Argentine National Anthem. Any other song you copy into `songs/`, and every audio file, is ignored by git and stays on your computer (see [`songs/README.md`](songs/README.md)). To write new songs, the UltraStar Play editor, the MuseScore plugin or UltraSinger are good options.
 
 ## Project structure
 
@@ -89,7 +89,7 @@ tests/                  tests for the logic and the voice engine
 docs/                   technical notes
 ```
 
-`js/logic/` does not import anything from the interface, so it can be tested in Node. Every file starts with a short comment that says what it does.
+`js/logic/` does not import anything from the interface, so it can be tested in Node.
 
 ## Development
 
@@ -108,7 +108,6 @@ The online version at https://cara-o-que.netlify.app/ is this same repository pu
 - [Voice engine and consonants](docs/voice-engine.md)
 - [English songs](docs/english-songs.md)
 - [Consonant measurements on OpenSLR 61](docs/openslr-measurements.md) and [how to repeat them](tools/measure-dataset/README.md)
-- [Design decisions](docs/design.md)
 - [Publishing the web version](docs/publishing.md) and [songs from Google Drive](docs/google-drive.md)
 
 ## Known limitations
@@ -116,15 +115,15 @@ The online version at https://cara-o-que.netlify.app/ is this same repository pu
 - The default vowel templates are approximate; people with reduced lip movement should calibrate.
 - Consonants are rule-based synthesis: understandable in context, but they do not sound like a recorded voice.
 - The articulation gesture only uses mouth opening; it cannot tell a lip closure (/p/) from a jaw closure (/t/).
-- Latency has not been measured yet («Compensate camera delay» adjusts it by hand).
+- Latency has not been measured yet ("Compensate camera delay" adjusts it by hand).
 - English support has not been tested with native speakers yet.
 
 ## Credits
 
-- Voice model: L. Feugère, C. d'Alessandro, B. Doval and O. Perrotin, «Cantor Digitalis: chironomic parametric synthesis of singing», *EURASIP Journal on Audio, Speech, and Music Processing* 2017:2. Consonants inspired by Digitartic (same group, LIMSI).
+- Voice model: L. Feugère, C. d'Alessandro, B. Doval and O. Perrotin, "Cantor Digitalis: chironomic parametric synthesis of singing", *EURASIP Journal on Audio, Speech, and Music Processing* 2017:2. Consonants inspired by Digitartic (same group, LIMSI).
 - The voice engine adapts the Web Audio implementation by [Edward Browncross](https://github.com/edwardbrowncross/cantor-digitalis) (ISC license).
-- Recorded consonants and measurements: OpenSLR 61, A. Guevara-Rukoz et al., «Crowdsourced Latin American Spanish for Low-Resource Text-to-Speech», *Proc. LREC 2020* (CC BY-SA 4.0).
-- English: CMU Pronouncing Dictionary (Carnegie Mellon University) and J. Hillenbrand et al., «Acoustic characteristics of American English vowels», *JASA* 97(5), 1995.
+- Recorded consonants and measurements: OpenSLR 61, A. Guevara-Rukoz et al., "Crowdsourced Latin American Spanish for Low-Resource Text-to-Speech", *Proc. LREC 2020* (CC BY-SA 4.0).
+- English: CMU Pronouncing Dictionary (Carnegie Mellon University) and J. Hillenbrand et al., "Acoustic characteristics of American English vowels", *JASA* 97(5), 1995.
 - Soprano vowels: Barrientos Sandoval and Cataldo Ferreira, *IEEE Latin America Transactions* 19(12), 2021.
 
 ## License

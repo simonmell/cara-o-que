@@ -6,9 +6,9 @@
 //   node tools/render.mjs catalog-en audio/english-catalog.wav
 //
 // Songs with #LANGUAGE:English are pronounced in English (js/logic/english.js). The CMU dictionary is passed with
-// --dictionary (the index.js of the npm package «cmu-pronouncing-dictionary»); without it, words are read as Spanish.
+// --dictionary (the index.js of the npm package "cmu-pronouncing-dictionary"); without it, words are read as Spanish.
 //
-// «catalog» sings each consonant in an isolated syllable (CV, after a pause) and between vowels (a-CV),
+// "catalog" sings each consonant in an isolated syllable (CV, after a pause) and between vowels (a-CV),
 // and writes next to it a .txt with the minute and second of each example.
 // Consonants are triggered as in the automatic level (ahead of time by the length of the onset).
 import fs from 'fs';
@@ -44,7 +44,7 @@ function render(notes, { consonants = true, transpose = -12, voice = {} } = {}) 
   const d = new CantorDSP(FS);
   d.message({ type: 'samples', fs: SMP.fs, sets: SMP.sets });
   const vs = { tension: 0.5, breath: 0.05, S: 0.36, rough: 0.03, vibrato: 0.006, ...voice };
-  if (vs.smpSet == null) vs.smpSet = vs.S >= 0.44 || vs.vset === 'soprano' ? 'f' : 'm';   // like «by tract size» in the app
+  if (vs.smpSet == null) vs.smpSet = vs.S >= 0.44 || vs.vset === 'soprano' ? 'f' : 'm';   // like "by tract size" in the app
   const isEn = notes.some((n) => n.en);
   if (isEn) vs.vset = vs.vset === 'soprano' ? 'en_w' : 'en_m';
   d.message({ type: 'voice', ...vs });
@@ -125,12 +125,12 @@ function catalog() {
   for (const [label, iso, inter] of CATALOG) {
     if (iso) {
       notes.push({ text: iso, vowel: VOWEL(iso), startMs: t, endMs: t + D, midi, line: ++line, wordStart: true });
-      marks.push(`${fmt(t - 100)}  ${label}: «${iso}» isolated`);
+      marks.push(`${fmt(t - 100)}  ${label}: "${iso}" isolated`);
       t += D + 650;
     }
     notes.push({ text: 'a', vowel: 'a', startMs: t, endMs: t + 380, midi, line: ++line, wordStart: true });
     notes.push({ text: inter, vowel: VOWEL(inter), startMs: t + 380, endMs: t + 380 + D, midi, line, wordStart: false });
-    marks.push(`${fmt(t)}  ${label}: «a${inter}» between vowels`);
+    marks.push(`${fmt(t)}  ${label}: "a${inter}" between vowels`);
     t += 380 + D + 750;
   }
   return { notes, marks };

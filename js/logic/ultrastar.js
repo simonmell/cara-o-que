@@ -1,6 +1,4 @@
-// UltraStar files: reading the .txt (tags, notes, timing), choosing the files of each song
-// inside its folder, and grouping a chosen folder into songs. Also the nucleus vowel of a Spanish
-// syllable, needed when reading the notes. No DOM: also used from Node.
+// UltraStar .txt parser, finding the audio of each song folder and the nucleus vowel of a syllable.
 
 import { parseNum } from './common.js';
 
@@ -94,7 +92,7 @@ export function songAssets(song, names) {
 }
 
 // Songs folder: each subfolder is a song and is named after the folder.
-// paths: relative paths of the chosen files («songs/Title/title.txt»). Returns one entry per folder
+// paths: relative paths of the chosen files ("songs/Title/title.txt"). Returns one entry per folder
 // that has some .txt, with the indices of its files. If the folder of a single song is chosen directly,
 // that folder is the song.
 export function groupSongFolders(paths) {
@@ -113,16 +111,16 @@ export function groupSongFolders(paths) {
     .sort((a, b) => a.name.localeCompare(b.name, 'es', { sensitivity: 'base' }));
 }
 
-// Nucleus vowel of a Spanish syllable: «can» → a, «ción» → o, «pí» → i, «que» → e, «~» → the previous one.
+// Nucleus vowel of a Spanish syllable: "can" → a, "ción" → o, "pí" → i, "que" → e, "~" → the previous one.
 export function nucleus(text, prev = null) {
   let raw = String(text).toLowerCase().replace(/ü/g, 'w');
   const letters = raw.replace(/[^a-záéíóúñwy]/g, '');
-  if (!letters) return prev;               // «~» or punctuation: keeps the previous vowel
+  if (!letters) return prev;               // "~" or punctuation: keeps the previous vowel
   const acc = raw.match(/[áéíóú]/);
   if (acc) return acc[0].normalize('NFD')[0];
   let s = letters.normalize('NFD').replace(/[̀-ͯ]/g, '');
   s = s.replace(/([qg])u([ei])/g, '$1$2');      // silent u: que, gui
-  s = s.replace(/y(?![aeiou])/g, 'i');           // y as a vowel: hoy, muy, «y»
+  s = s.replace(/y(?![aeiou])/g, 'i');           // y as a vowel: hoy, muy, "y"
   const vs = s.match(/[aeiou]/g);
   if (!vs) return null;                          // syllable without a vowel: free note
   const strong = vs.filter((v) => 'aeo'.includes(v));

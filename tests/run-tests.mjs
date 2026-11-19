@@ -1,5 +1,4 @@
-// Tests of the karaoke's pure logic and of the voice engine (no browser): npm test  (or node tests/run-tests.mjs)
-// Imports the js/logic modules and the js/voice/cantor-dsp.js engine directly; they do not touch the page.
+// Logic and voice engine tests, no browser needed. Run with npm test.
 import fs from 'fs'; import path from 'path'; import assert from 'assert';
 import { fileURLToPath } from 'url';
 import * as common from '../js/logic/common.js';
@@ -116,7 +115,7 @@ ok('consonant plans are ordered; ~50 ms lead and VOT growing from /p/ to /k/');
   assert.equal(byText('do'), 'd');      // cuando: after a nasal → stop
   assert.equal(byText('mi'), 'm');
   const di = items[ns.findIndex((nt) => nt.text.trim() === 'di')].onset.join(' ');
-  assert.equal(di, 'D');                // dicen after «pollitos» (coda s, no pause) → [ð]
+  assert.equal(di, 'D');                // dicen after "pollitos" (coda s, no pause) → [ð]
   ok('allophones: b d g approximants between vowels and stops after a pause or nasal');
 }
 const det = new L.ArticulationDetector(); let evs = [];
@@ -151,11 +150,11 @@ ok('consonants do not cause volume jumps');
   assert.deepEqual(unk, ['zork']);
   const e = s.notes.map((x) => x.en);
   assert.equal(e[0].onset.join(' '), 'tʰ w'); assert.equal(e[0].fam, 'i'); assert.equal(e[0].ipa, 'ɪ');     // aspirated t
-  assert.equal(e[3].onset.join(' '), 'r'); assert.equal(e[3].ipa, 'ə');                                      // «little»: [ɾ] and [ə]
-  assert.equal(e[4].onset.join(' '), 's t'); assert.equal(e[4].coda.join(' '), 'ɹ');                         // «star»: unaspirated t after s
-  assert.equal(e[6].onset.join(' '), 'r');                                                                    // «water»: [ɾ]
-  assert.equal(e[8].v2, null); assert.equal(e[9].cont, true); assert.equal(e[9].v2, 'IH');                  // «high ~»: glides at the end
-  assert.equal(e[10].ipa, 'aɪ'); assert.equal(e[10].coda.join(' '), 'ɹ');                                  // «fire» on one note
+  assert.equal(e[3].onset.join(' '), 'r'); assert.equal(e[3].ipa, 'ə');                                      // "little": [ɾ] and [ə]
+  assert.equal(e[4].onset.join(' '), 's t'); assert.equal(e[4].coda.join(' '), 'ɹ');                         // "star": unaspirated t after s
+  assert.equal(e[6].onset.join(' '), 'r');                                                                    // "water": [ɾ]
+  assert.equal(e[8].v2, null); assert.equal(e[9].cont, true); assert.equal(e[9].v2, 'IH');                  // "high ~": glides at the end
+  assert.equal(e[10].ipa, 'aɪ'); assert.equal(e[10].coda.join(' '), 'ɹ');                                  // "fire" on one note
   assert(e[11].unknown); assert.equal(s.notes[11].vowel, 'o');
   assert.deepEqual(L.pickCoda(['n', 'd', 'z']), ['z']); assert.deepEqual(L.pickCoda(['n', 'd']), ['n']);
   ok('English: dictionary syllables spread over the notes, aspirates, [ɾ], diphthongs and unknown words');

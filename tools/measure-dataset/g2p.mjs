@@ -16,7 +16,7 @@ for (const w of words) {
     return x;
   });
   const variants = new Set();
-  // variants: b d g as stops or approximants, and «ll/y» as [ʃ] or [ʝ]; the aligner picks the one that fits
+  // variants: b d g as stops or approximants, and "ll/y" as [ʃ] or [ʝ]; the aligner picks the one that fits
   for (const mode of ['stop', 'approx']) for (const sh of ['ʃ', 'ʝ']) {
     const s = seq.map((x, i) => {
       if (x.g) return x.g;

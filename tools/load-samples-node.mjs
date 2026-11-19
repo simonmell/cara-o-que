@@ -1,6 +1,4 @@
-// Recorded consonants (OpenSLR 61, CC BY-SA 4.0) for use outside the browser: reads data/consonant-samples.json
-// and decodes each fragment (16-bit PCM in base64 with its scale factor) into a Float32Array, just like
-// js/voice/consonant-samples.js does in the page. Used by tools/render.mjs and tests/calibrate-samples.mjs.
+// Loads data/consonant-samples.json in Node (for render.mjs and calibrate-samples.mjs).
 import fs from 'fs';
 
 export const SAMPLES_PATH = new URL('../data/consonant-samples.json', import.meta.url);

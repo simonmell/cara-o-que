@@ -1,5 +1,4 @@
-// Singing rules: from head height to note, the pitch assist, the score of each note and of the
-// song, and the four assistance levels. No DOM.
+// Head height -> note, pitch assist, scoring and the four levels.
 
 import { clamp } from './common.js';
 

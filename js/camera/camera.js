@@ -1,5 +1,4 @@
-// Camera and MediaPipe: opens the camera, loads the face model and, on every video frame, measures the mouth
-// features, the head height and the face size. Also the status message under the camera.
+// Camera + MediaPipe face landmarks -> mouth features, head height and face size on every frame.
 
 import { beginSetPosition, cancelCalibration, nextCalStep, startCalibration } from './calibration.js';
 import { MODEL_URL, MP_URL, MP_WASM } from '../config.js';

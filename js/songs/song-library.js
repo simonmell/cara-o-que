@@ -1,7 +1,5 @@
-// Song list: the drop-down, loading a song with its music, and the song sources (the folder
-// chosen by hand, songs/list.js built by the local server, a shared Google Drive folder, or the server's folder listing).
-// The demo songs always stay at the end of the list. Songs from Google Drive are listed by name only, and a song is
-// downloaded when it is chosen.
+// Song list and where songs come from: a folder picked by hand, songs/list.js, Google Drive or the
+// server's folder listing. Drive songs are only downloaded when chosen.
 
 import { renderMeta, setSong } from './current-song.js';
 import { paintSeekTrack } from '../playback/player.js';
@@ -12,7 +10,7 @@ import { groupSongFolders, parseUltraStar, songAssets } from '../logic/ultrastar
 
 export const sel = $('songSel');
 // Fills the drop-down with the songs in S.songs and selects the one at index selIdx. When there are songs besides
-// the demos, they are shown in two groups: «Your songs» and «Examples».
+// the demos, they are shown in two groups: "Your songs" and "Examples".
 export const fillSongs = (selIdx) => {
   sel.innerHTML = '';
   const option = (s, i) => { const o = document.createElement('option'); o.value = i; o.textContent = s.nameKey ? t(s.nameKey) : s.name; return o; };
@@ -122,13 +120,13 @@ export async function loadSongFolders(folders, { quiet = false } = {}) {
   return true;
 }
 
-// 2) Automatic list of the «songs» folder next to this page:
+// 2) Automatic list of the "songs" folder next to this page:
 //    a) songs/list.js: the local server (tools/server.cjs) builds it on the fly; the web version ships it ready-made;
 //    b) if it is not there, the http server's folder listing.
 export const encPath = (...parts) => parts.filter(Boolean).map(encodeURIComponent).join('/');
 // Turns songs/list.js (window.KARAOKE_SONGS) into song folders ready to load.
 export const fromManifest = (m) => (m.folders || []).map((c) => ({
-  // «name»: the title to show when the published folder has a different name (web version, tools/build-web.ps1)
+  // "name": the title to show when the published folder has a different name (web version, tools/build-web.ps1)
   name: c.name || c.folder || 'songs', dir: c.folder, loose: !c.folder,
   files: (c.files || []).map((n) => ({
     name: n, size: c.txt?.[n] ? c.txt[n].length * 0.75 : 0,
@@ -149,7 +147,7 @@ export async function listHttpDir(url) {
   return [...doc.querySelectorAll('a[href]')].map((a) => decodeURIComponent(a.getAttribute('href')))
     .filter((h) => h && !h.startsWith('?') && !h.startsWith('/') && !h.startsWith('..') && !/^[a-z]+:/i.test(h));
 }
-// Builds the song folders by walking the http listing of «songs» and of each subfolder.
+// Builds the song folders by walking the http listing of "songs" and of each subfolder.
 export async function fromHttp() {
   const top = await listHttpDir('songs/');
   const folders = [];
@@ -161,12 +159,12 @@ export async function fromHttp() {
   if (looseFiles.length) folders.push(mk('', looseFiles));
   for (const h of top.filter((h) => h.endsWith('/'))) {
     const dir = h.slice(0, -1);
-    try { folders.push(mk(dir, (await listHttpDir(encPath('songs', dir) + '/')).filter((x) => !x.endsWith('/')))); } catch { /* ignorar */ }
+    try { folders.push(mk(dir, (await listHttpDir(encPath('songs', dir) + '/')).filter((x) => !x.endsWith('/')))); } catch { /* ignore */ }
   }
   return folders;
 }
 
-// Google Drive: a folder shared as «anyone with the link can view», read with the Drive API and an API key
+// Google Drive: a folder shared as "anyone with the link can view", read with the Drive API and an API key
 // (no sign-in). Same layout as the songs folder: one subfolder per song, or loose .txt files.
 const DRIVE_API = 'https://www.googleapis.com/drive/v3/files';
 const FOLDER_MIME = 'application/vnd.google-apps.folder';
@@ -177,11 +175,11 @@ const driveKey = () => driveConfig().apiKey || DRIVE_API_KEY;
 export function driveFolderId() {
   const p = new URLSearchParams(location.search).get('drive');
   const id = p || driveConfig().folderId || DRIVE_FOLDER_ID;
-  // accepts the bare ID, «ID?usp=sharing», a …/folders/ID link or an …?id=ID link
+  // accepts the bare ID, "ID?usp=sharing", a …/folders/ID link or an …?id=ID link
   const link = /(?:folders\/|[?&]id=)([\w-]+)/.exec(id);
   return link ? link[1] : (/[\w-]{10,}/.exec(id) || [id.trim()])[0];
 }
-// Error from the Drive API with Google's own explanation (for example, «Requests from referer ... are blocked»).
+// Error from the Drive API with Google's own explanation (for example, "Requests from referer ... are blocked").
 async function driveError(r) {
   let msg = '';
   try { msg = (await r.json()).error.message; } catch { /* no JSON body */ }

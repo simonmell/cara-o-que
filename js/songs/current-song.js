@@ -1,5 +1,4 @@
-// The current song: loading it (lyrics, notes, language and consonants), showing its details, going back to the start and
-// finding which note corresponds to each moment.
+// Loading the current song and looking up notes by time.
 
 import { cmuDict, cmuLoading, enLookup, loadCmu } from './english-dictionary.js';
 import { buildArticulation, resetArticulation } from '../playback/consonant-timing.js';

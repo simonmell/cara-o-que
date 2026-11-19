@@ -2,7 +2,7 @@
 rem Opens the karaoke on this computer: starts a local server with Node (tools\server.cjs) and opens the
 rem browser at http://127.0.0.1:8080/ (or another port if that one is taken). The server is needed because
 rem browsers do not load JavaScript modules or the audio processor when index.html is double-clicked (file://).
-rem The song list is built automatically from whatever is in the «songs» folder.
+rem The song list is built automatically from whatever is in the "songs" folder.
 rem On other computers, use the published web version (Build web version.bat).
 chcp 65001 >nul
 cd /d "%~dp0"

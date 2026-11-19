@@ -1,5 +1,4 @@
-// Interface texts in English (HTML_EN) and texts built by the code in both languages (MSG). The fixed
-// Spanish texts are in index.html and are read from there at startup.
+// English page texts (HTML_EN) and the messages built in code, in both languages (MSG).
 
 export const HTML_EN = {
   'w.title': 'Welcome to Cara<span class="o">-o-</span>que',
@@ -178,8 +177,8 @@ export const MSG = {
     posSet: 'Starting position set.',
     'cal.rest': 'Mouth relaxed and closed', 'cal.rest.h': 'Stay in your comfortable position, looking at the camera.',
     // For English speakers each mouth shape is named with a word whose vowel can be held without gliding:
-    // «bed» and not «day» (a diphthong, the mouth closes); «go» held without closing towards «oo» (English has no pure /o/;
-    // «saw» does not work because in many American accents it sounds the same as «father»).
+    // "bed" and not "day" (a diphthong, the mouth closes); "go" held without closing towards "oo" (English has no pure /o/;
+    // "saw" does not work because in many American accents it sounds the same as "father").
     'cal.a': 'Hold “ah”, as in father', 'cal.a.h': 'Open your mouth for the vowel in “father”. No sound needed.',
     'cal.e': 'Hold “eh”, as in bed', 'cal.e.h': 'The vowel in “bed”: mouth half open, lips a little spread. Not “ay” as in “day”, which closes.',
     'cal.i': 'Hold “ee”, as in see', 'cal.i.h': 'The vowel in “see”: mouth barely open, lips spread like a smile.',
@@ -211,10 +210,10 @@ export const MSG = {
     found: (n, m) => `${n} ${n === 1 ? 'song' : 'songs'} (${m} with music).`,
     skipped: (l) => ` Without a valid UltraStar .txt: ${l}.`,
     reading: 'Reading the folder…',
-    driveFail: 'I couldn’t read the Google Drive folder. Check that it is shared with «anyone with the link».',
-    driveFound: (n) => `${n} ${n === 1 ? 'song' : 'songs'} in Google Drive. Pick one under «Song» to load it.`,
-    songLoading: (n) => `Loading «${n}»…`,
-    songNotFound: (n) => `«${n}» has no valid UltraStar .txt.`,
+    driveFail: 'I couldn’t read the Google Drive folder. Check that it is shared with “anyone with the link”.',
+    driveFound: (n) => `${n} ${n === 1 ? 'song' : 'songs'} in Google Drive. Pick one under “Song” to load it.`,
+    songLoading: (n) => `Loading “${n}”…`,
+    songNotFound: (n) => `“${n}” has no valid UltraStar .txt.`,
     songsOwn: 'Your songs', songsDemo: 'Examples',
   },
 };

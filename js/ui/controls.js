@@ -1,5 +1,4 @@
-// Controls: volumes, voice button, levels and settings (reading and writing the page controls), the
-// player buttons and the push-button (space bar, vowel keys or pressing the lane).
+// Settings controls, player buttons and the switch input (space bar, vowel keys, touching the lane).
 
 import { relang, resetPlayback } from '../songs/current-song.js';
 import { fmtTime, pause, play, seekTo, updatePlayer } from '../playback/player.js';
@@ -109,10 +108,10 @@ export function wireControls() {
     $('advanced').hidden = !open;
     $('advBtn').setAttribute('aria-expanded', String(open));
     $('advBtn').textContent = t(open ? 'advHide' : 'advShow');
-    try { localStorage.setItem(STORE_KEY + ':adv', open ? '1' : ''); } catch (e) { /* ignorar */ }
+    try { localStorage.setItem(STORE_KEY + ':adv', open ? '1' : ''); } catch (e) { /* ignore */ }
   };
   $('advBtn').addEventListener('click', () => advOpen($('advanced').hidden));
-  try { if (localStorage.getItem(STORE_KEY + ':adv')) advOpen(true); } catch (e) { /* ignorar */ }
+  try { if (localStorage.getItem(STORE_KEY + ':adv')) advOpen(true); } catch (e) { /* ignore */ }
 }
 
 // Push-button: space bar, vowel keys or holding the lane pressed

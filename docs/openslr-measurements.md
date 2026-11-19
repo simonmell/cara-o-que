@@ -49,11 +49,11 @@ The stops agree with Martínez Celdrán and Villalba (Peninsular Spanish); the o
 | ð | 64 | 60 | −0.5 | — | — | 1.00 |
 
 Estimated VOT (burst → first period with f0): p ≈ 2–10 ms, t ≈ 12 ms, k ≈ 14–25 ms; closure of 50–60 ms.
-ʃ is mostly voiceless (0.13): voiceless «sheísmo», typical of young Buenos Aires speakers.
+ʃ is mostly voiceless (0.13): voiceless "sheísmo", typical of young Buenos Aires speakers.
 
 ## What was changed in the karaoke
 
-- `LOCUS_EQ_AR`: the equations in the table (the «used» column, average of men and women), also for m, n, s, l, r and palatals.
+- `LOCUS_EQ_AR`: the equations in the table (the "used" column, average of men and women), also for m, n, s, l, r and palatals.
 - VOT p 8 / t 13 / k 22 ms; closure of p t k 45 ms (somewhat shorter than in speech, for singing).
 - Fricatives: s 80 ms with a peak at 6.3 kHz; ʃ 95 ms and 3.4 kHz; f 85 ms with a lower centre; x 85 ms. s and ʃ go up about 3 dB.
 - Approximants β ð ɣ: 50 ms and a smaller level dip; nasals m 60 / n 50 / ñ 80 ms with a somewhat stronger murmur.

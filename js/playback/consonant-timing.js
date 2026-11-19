@@ -1,5 +1,4 @@
-// Live consonants: builds the list of syllables of the song and, while singing, decides on every frame when
-// to send each consonant's plan to the engine (automatic or by mouth gesture).
+// Decides when each consonant is sent to the engine while singing.
 
 import { S } from '../state.js';
 import { applyAllophones, ArticulationDetector, gestureStrength, onsetLead, openNorm, planCoda, planHum, planOnset, splitSyllable } from '../logic/articulation.js';

@@ -1,5 +1,4 @@
-// Cara-o-que startup. Order: saved settings → language → interface → demo song → per-frame loop.
-// Each part lives in its own module (see the structure in the README).
+// Startup.
 
 import { cal, renderCalStep } from './camera/calibration.js';
 import { listCameras, setStatus, stream, wireCamera } from './camera/camera.js';

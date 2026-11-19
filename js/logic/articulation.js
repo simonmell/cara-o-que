@@ -1,12 +1,9 @@
-// Consonants: from a written syllable to its phonemes (onset, nucleus, coda), the rules of Rioplatense Spanish,
-// and the «plans» that tell the voice engine how to move each parameter over time to sound like that consonant.
-// Includes the mouth-gesture detector (close and open) that fires the consonants in levels 3 and 4.
-// No DOM: also used from Node (tests, render and measurement tools).
+// Spanish consonants: syllable -> phonemes (Rioplatense rules) -> parameter "plans" for the voice engine.
+// Also the mouth-gesture detector used in levels 3 and 4. No DOM, so it runs in Node too.
 
 import { clamp, VOWELS } from './common.js';
 
-// ---------- Articulation: syllable → phonemes → consonant plan (no DOM, tested with Node) ----------
-// Consonant classes (Rioplatense Spanish: «ll» and consonantal «y» are pronounced [ʃ]; c/z/s are pronounced [s]).
+// Consonant classes (Rioplatense Spanish: "ll" and consonantal "y" are pronounced [ʃ]; c/z/s are pronounced [s]).
 export const PHONES = {
   p: { cls: 'stop', voiced: false, place: 'lab' }, t: { cls: 'stop', voiced: false, place: 'den' }, k: { cls: 'stop', voiced: false, place: 'vel' },
   b: { cls: 'stop', voiced: true, place: 'lab' }, d: { cls: 'stop', voiced: true, place: 'den' }, g: { cls: 'stop', voiced: true, place: 'vel' },
@@ -35,7 +32,7 @@ export const isV = (c) => c in VOW;
 // Graphemes → phonemes of a word. Vowels stay as {v, acc}; consonants as {p}.
 export function wordPhones(w) {
   const out = [];
-  if (w === 'y') return [{ v: 'i', acc: false, glideY: true }];        // the conjunction «y»
+  if (w === 'y') return [{ v: 'i', acc: false, glideY: true }];        // the conjunction "y"
   for (let i = 0; i < w.length; i++) {
     const c = w[i], n = w[i + 1], nn = w[i + 2];
     if (c === 'c' && n === 'h') { out.push({ p: 'ch' }); i++; continue; }
@@ -60,7 +57,7 @@ export function wordPhones(w) {
 }
 
 // Splits an UltraStar syllable into onset, vowel nucleus and coda.
-// wordStart: the syllable starts a word (for word-initial «r», which is a trill).
+// wordStart: the syllable starts a word (for word-initial "r", which is a trill).
 export function splitSyllable(text, { prev = null, wordStart = false } = {}) {
   const raw = String(text).toLowerCase();
   const words = raw.replace(/[^a-záéíóúüñ\s]/g, ' ').split(/\s+/).filter(Boolean);
@@ -90,7 +87,7 @@ export function splitSyllable(text, { prev = null, wordStart = false } = {}) {
 // ag: multiplies the person's voice · vf: the consonant's own minimum voicing · oral: 1 open, 0 closed
 // fric: noise envelope · fricF/fricB, fb and f2–f5: spectral noise recipe (own filter and vocal-tract formants)
 // asp: aspiration · lmix + F1L/F2L/F3L: formant locus · nasal + FNZ: nasalization · f0d: microprosody (semitones)
-// F2L or fricF at −1 = «velar»: the engine computes them from the following vowel.
+// F2L or fricF at −1 = "velar": the engine computes them from the following vowel.
 // lk + lc: locus equation (F2 = lk · vowel F2 + lc); when present, they replace F2L.
 export const LOCUS = {
   lab: [280, 900, 2200], den: [280, 1650, 2650], alv: [300, 1700, 2700], pal: [280, 2100, 2900], vel: [280, -1, -1],
@@ -108,8 +105,8 @@ export const NOISE = {
   dh: { r: [4500, 4000, 1, 0, 0, 0, 0], g: 0.012 },
   th: { r: [5500, 5000, 1, 0, 0, 0.1, 0.2], g: 0.035 },   // English [θ]: diffuse, weak and high
 };
-// Spanish locus equations (Martínez Celdrán and Villalba, «Las ecuaciones de locus y el punto de articulación en
-// español», Estudios de Fonética Experimental, Universitat de Barcelona; mean of 10 speakers, table 1):
+// Spanish locus equations (Martínez Celdrán and Villalba, "Las ecuaciones de locus y el punto de articulación en
+// español", Estudios de Fonética Experimental, Universitat de Barcelona; mean of 10 speakers, table 1):
 // F2 at vowel onset = k · vowel F2 + c. So /d/ starts differently before /a/, /i/ or /u/, as in real speech.
 // Labial k 0.83 c 126 Hz · dental 0.58 / 746 Hz · velar 1.00 / 29 Hz (the velar adapts to the vowel). They are also used
 // for fricatives and nasals at the same place. The engine scales c with the vocal-tract size.
@@ -128,8 +125,8 @@ export const APPROX = { lab: [340, 1000, 2300], den: [340, 1600, 2600], vel: [34
 
 // Empty segment of a consonant plan: parameter tracks, vowel onset (R), end and recorded fragments.
 export function seg() { return { tracks: {}, R: 0, end: 0, smp: [] }; }
-// Recorded consonant (if the engine has fragments of that consonant): «loop» = noise texture repeated under the
-// fric envelope (fricatives); «shot» = burst played once from t0 (p t k). Without fragments, the synthesis plays.
+// Recorded consonant (if the engine has fragments of that consonant): "loop" = noise texture repeated under the
+// fric envelope (fricatives); "shot" = burst played once from t0 (p t k). Without fragments, the synthesis plays.
 export function sample(s, p, mode, t0, t1, k = 1) { s.smp.push({ p, mode, t0, t1, k }); }
 // Segment-building helpers: one point (t, v) in a track, several points, and a phoneme's fragment key and noise key.
 export function key(s, name, t, v) { (s.tracks[name] ||= []).push([t, v]); s.end = Math.max(s.end, t); }
@@ -308,7 +305,7 @@ export function trackValue(ks, t) {
 export const onsetLead = (phones) => (phones.length ? clamp(planOnset(phones).release, 40, 100) : 0);
 
 // b d g are stops after a pause (line start or long rest) or after a nasal (and d after l);
-// in other contexts they are approximants [β ð ɣ]: «la gallina» → la ɣallina, «comida» → komiða.
+// in other contexts they are approximants [β ð ɣ]: "la gallina" → la ɣallina, "comida" → komiða.
 export function applyAllophones(items, notes) {
   items.forEach((a, i) => {
     const o = a.onset;
@@ -363,7 +360,7 @@ export function planCoda(phones, holdMs, s = 1, { vowel = null } = {}) {
   return plan;
 }
 
-// Syllables without a vowel («mmm»): the voiced consonant is held for the whole note.
+// Syllables without a vowel ("mmm"): the voiced consonant is held for the whole note.
 export function planHum(phones, holdMs) {
   const sonorant = phones.filter((p) => PHONES[p] && ['nasal', 'liquid'].includes(PHONES[p].cls));
   if (!sonorant.length) return planOnset(phones);
@@ -394,7 +391,7 @@ export function mouthDeltas(f, weights, model) {
     dSpread: clamp(spreadOf(f) - eS / tot, -1, 1),
   };
 }
-// Normalized mouth opening: 0 = rest and 1 = «a», according to the calibrated model.
+// Normalized mouth opening: 0 = rest and 1 = "a", according to the calibrated model.
 export const openNorm = (f, model) => (f[0] - model.templates.rest[0]) / Math.max(1e-3, model.templates.a[0] - model.templates.rest[0]);
 
 // Articulation gesture detector: a closure (of lips or jaw) followed by a reopening.

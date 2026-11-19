@@ -1,5 +1,4 @@
-// Demo songs included in the app, in UltraStar format. They play while the songs folder has not
-// been loaded yet. Both are in the public domain.
+// The two demo songs (public domain).
 
 export const DEMO_SONG = `#TITLE:Los pollitos dicen
 #ARTIST:Tradicional (adaptación de ejemplo)
@@ -67,7 +66,7 @@ export const DEMO_SONG = `#TITLE:Los pollitos dicen
 E
 `;
 
-// English demo song: «Twinkle, Twinkle, Little Star» (lyrics by Jane Taylor, 1806; traditional melody;
+// English demo song: "Twinkle, Twinkle, Little Star" (lyrics by Jane Taylor, 1806; traditional melody;
 // public domain)
 export const DEMO_SONG_EN = `#TITLE:Twinkle, Twinkle, Little Star
 #ARTIST:Traditional (lyrics: Jane Taylor, 1806)

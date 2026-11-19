@@ -1,21 +1,7 @@
 #!/usr/bin/env node
-// Local karaoke server: serves the project folder at http://127.0.0.1:8080/ so it can be used on this
-// computer. It is needed because browsers do not load JavaScript modules or the audio processor
-// (AudioWorklet) from file://, that is, when index.html is double-clicked.
-//
-// Usage:  node tools/server.cjs [--open] [--port 8080]
-//   --open    opens the karaoke in the default browser once the server is ready
-//   --port    port to use (if it is taken or reserved, others are tried; see CANDIDATES)
-//
-// Started by «Open karaoke.bat». Nothing needs to be installed: it only uses modules that ship with Node.
-// It listens on 127.0.0.1 only, so it cannot be reached from other computers on the network.
-// Other computers use the published web version (see «Build web version.bat»).
-//
-// Besides the files, it generates songs/list.js on the fly (the song list with their .txt files), so a new
-// song copied into «songs» shows up just by reloading the page.
-//
-// Written in CommonJS without modern syntax (no import, no async/await) so it also works with old versions
-// of Node (from 6 on). The .cjs extension keeps recent versions from treating it as an ES module.
+// Local server for the karaoke (modules and the AudioWorklet do not load from file://).
+// Usage: node tools/server.cjs [--open] [--port 8080]
+// Also builds songs/list.js on each request. Plain CommonJS so it runs on old Node versions.
 'use strict';
 
 const http = require('http');
@@ -26,15 +12,15 @@ const spawn = require('child_process').spawn;
 const ROOT = path.resolve(__dirname, '..');
 const SONGS = path.join(ROOT, 'songs');
 const HOST = '127.0.0.1';
-const MARKER = '/__cara-o-que';   // path that answers «I am the karaoke server» (so it is not started twice)
+const MARKER = '/__cara-o-que';   // path that answers "I am the karaoke server" (so it is not started twice)
 
-// ── Command-line options ──────────────────────────────────────────────────────────────────────────
+// Command-line options
 const args = process.argv.slice(2);
 const openBrowserFlag = args.indexOf('--open') >= 0;
 const iPort = args.indexOf('--port');
 const PORT = iPort >= 0 ? Number(args[iPort + 1]) : Number(process.env.PORT || 8080);
 
-// ── File types ────────────────────────────────────────────────────────────────────────────────────
+// File types
 const MIME = {
   '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.mjs': 'text/javascript; charset=utf-8',
   '.css': 'text/css; charset=utf-8', '.json': 'application/json; charset=utf-8', '.txt': 'text/plain; charset=utf-8',
@@ -60,9 +46,7 @@ function entries(dir) {
   return r;
 }
 
-// ── songs/list.js generated on the fly ────────────────────────────────────────────────────────────
-// One entry per folder that has UltraStar .txt files, with the list of files and each .txt in base64 (so their
-// encoding does not matter). Read by js/songs/song-library.js.
+// songs/list.js: one entry per folder with UltraStar .txt files, each .txt in base64 so the encoding doesn't matter
 function songList() {
   if (!fs.existsSync(SONGS)) fs.mkdirSync(SONGS);
   const folders = [];
@@ -81,7 +65,7 @@ function songList() {
     'window.KARAOKE_SONGS = ' + JSON.stringify({ folders: folders }).replace(/<\//g, '<\\/') + ';\n';
 }
 
-// ── Folder listing (fallback: the page reads it if there is no list.js) ───────────────────────────
+// Folder listing, used by the page if there is no list.js
 function listing(dir, url) {
   const e = entries(dir);
   const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;');
@@ -90,7 +74,7 @@ function listing(dir, url) {
   return '<!doctype html><meta charset="utf-8"><title>' + esc(url) + '</title><ul>\n' + items.join('\n') + '\n</ul>\n';
 }
 
-// ── Handling each request ─────────────────────────────────────────────────────────────────────────
+// Requests
 function handle(req, res) {
   // No caching: a code change shows up just by reloading the page
   res.setHeader('Cache-Control', 'no-store');
@@ -126,14 +110,14 @@ function sendText(req, res, text, mime) {
   res.end(req.method === 'HEAD' ? undefined : body);
 }
 
-// Sends a file; with «Range» it sends only the requested piece (the player uses it to seek in the song)
+// Sends a file; with "Range" it sends only the requested piece (the player uses it to seek in the song)
 function sendFile(req, res, file, st) {
   const head = { 'Content-Type': mimeType(file), 'Accept-Ranges': 'bytes' };
   const m = /^bytes=(\d*)-(\d*)$/.exec(req.headers.range || '');
   let from = 0, to = st.size - 1, status = 200;
   if (m && (m[1] || m[2])) {
     if (m[1]) { from = Number(m[1]); if (m[2]) to = Math.min(Number(m[2]), st.size - 1); }
-    else from = Math.max(0, st.size - Number(m[2]));   // «bytes=-500»: the last 500
+    else from = Math.max(0, st.size - Number(m[2]));   // "bytes=-500": the last 500
     if (from > to || from >= st.size) {
       res.writeHead(416, { 'Content-Range': 'bytes */' + st.size }); res.end(); return;
     }
@@ -145,7 +129,7 @@ function sendFile(req, res, file, st) {
   fs.createReadStream(file, { start: from, end: to }).on('error', () => res.destroy()).pipe(res);
 }
 
-// ── Startup ───────────────────────────────────────────────────────────────────────────────────────
+// Startup
 
 // Is a karaoke already running on that port (for example, if the .bat was opened twice)?
 function alreadyRunning(port, done) {
@@ -168,11 +152,8 @@ function openBrowser(url) {
   } catch (e) { /* no browser: the address stays printed in the console */ }
 }
 
-// Ports to try, in order. Besides being used by another program (EADDRINUSE), on Windows a port can be
-// reserved by the system (Hyper-V, WSL and Docker reserve whole ranges, sometimes including 8080) and then
-// listening fails with EACCES. So after the neighbors of the chosen port, ports from other ranges are tried and,
-// finally, any free port the system hands out (0). The order is always the same, so on a given computer the
-// karaoke always lands on the same port: this matters because the browser stores the preferences per address.
+// Ports to try, always in the same order (the browser saves the settings per address).
+// On Windows, Hyper-V / WSL / Docker can reserve 8080 and listen() fails with EACCES instead of EADDRINUSE.
 const CANDIDATES = [PORT, PORT + 1, PORT + 2, 8765, 18765, 28765, 38765, 5577, 0];
 
 function ready(port) {

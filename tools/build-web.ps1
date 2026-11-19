@@ -1,4 +1,4 @@
-﻿# Builds the «web-version» folder: a clean copy of the karaoke to upload to a static host
+﻿# Builds the "web-version" folder: a clean copy of the karaoke to upload to a static host
 # (Netlify, Cloudflare Pages, GitHub Pages...). It contains only what is needed to use it:
 #   index.html, css/, js/  the app: the page, the styles and the JavaScript modules (voice engine included)
 #   data/                  the recorded consonants (consonant-samples.json) and their license
@@ -6,8 +6,8 @@
 #   songs/list.js          the song list (with each folder's original name for display)
 #   robots.txt             so search engines do not index it
 #   CREDITS.txt            licenses that must accompany the publication
-# Run by «Build web version.bat». Works with Windows PowerShell 5.1 and with PowerShell 7.
-# The «web-version» folder is deleted and rebuilt every time.
+# Run by "Build web version.bat". Works with Windows PowerShell 5.1 and with PowerShell 7.
+# The "web-version" folder is deleted and rebuilt every time.
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $songs = Join-Path $root 'songs'
@@ -20,7 +20,7 @@ $backing = 'karaoke|instrumental|backing|pista|sin voz|playback'
 function Js([string]$s) {
   '"' + ($s -replace '\\', '\\' -replace '"', '\"' -replace "`r", '\r' -replace "`n", '\n' -replace '<', '<') + '"'
 }
-# URL-friendly name: «Himno Nacional Argentino versión karaoke en Sol#M» -> «himno-nacional-argentino-version-karaoke-en-sol-m»
+# URL-friendly name: "Himno Nacional Argentino versión karaoke en Sol#M" -> "himno-nacional-argentino-version-karaoke-en-sol-m"
 function Slug([string]$s, [string]$fallback) {
   $n = $s.Normalize([Text.NormalizationForm]::FormD)
   $sb = New-Object Text.StringBuilder
@@ -92,8 +92,8 @@ $credits = @'
 Cara-o-que - web version
 
 Credits and licenses
-- Voice model: L. Feugère, C. d'Alessandro, B. Doval and O. Perrotin, «Cantor Digitalis: chironomic parametric
-  synthesis of singing», EURASIP Journal on Audio, Speech, and Music Processing 2017:2.
+- Voice model: L. Feugère, C. d'Alessandro, B. Doval and O. Perrotin, "Cantor Digitalis: chironomic parametric
+  synthesis of singing", EURASIP Journal on Audio, Speech, and Music Processing 2017:2.
 - The engine adapts the Web Audio implementation by Edward Browncross
   (https://github.com/edwardbrowncross/cantor-digitalis), under this license:
 
@@ -106,14 +106,14 @@ Credits and licenses
   TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 - MediaPipe Face Landmarker (Google): Apache 2.0. Downloaded from jsDelivr and Google when the page opens.
 - Recorded consonants (data/consonant-samples.json): fragments of OpenSLR 61, A. Guevara-Rukoz et al.,
-  «Crowdsourced Latin American Spanish for Low-Resource Text-to-Speech», Proc. LREC 2020.
+  "Crowdsourced Latin American Spanish for Low-Resource Text-to-Speech", Proc. LREC 2020.
   License CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/); the fragments are shared under the
   same license.
 - English pronunciation: CMU Pronouncing Dictionary (Carnegie Mellon University), npm package
-  «cmu-pronouncing-dictionary» (ISC license); downloaded from jsDelivr when an English song is chosen.
-- English vowels: J. Hillenbrand, L. Getty, M. Clark and K. Wheeler, «Acoustic characteristics of American English
-  vowels», JASA 97(5), 1995.
-- The songs in the «songs» folder belong to their authors and are included for testing only.
+  "cmu-pronouncing-dictionary" (ISC license); downloaded from jsDelivr when an English song is chosen.
+- English vowels: J. Hillenbrand, L. Getty, M. Clark and K. Wheeler, "Acoustic characteristics of American English
+  vowels", JASA 97(5), 1995.
+- The songs in the "songs" folder belong to their authors and are included for testing only.
 
 The camera image is processed in each person's browser; it is not sent to any server.
 '@
@@ -122,4 +122,4 @@ The camera image is processed in each person's browser; it is not sent to any se
 Write-Host ''
 Write-Host ("Web version ready in {0}: {1} song(s), {2:N1} MB in total." -f $out, $items.Count, ($total / 1MB))
 foreach ($a in $warnings) { Write-Host "Warning: $a" }
-Write-Host 'To publish it, upload that whole folder (see «Publishing online» in the README).'
+Write-Host 'To publish it, upload that whole folder (see "Publishing online" in the README).'

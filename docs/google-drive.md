@@ -11,7 +11,7 @@ many songs opens just as fast as one with a few. A subfolder without an UltraSta
 someone picks it.
 
 ```
-Cara-o-que songs/                  ← shared with «Anyone with the link»
+Cara-o-que songs/                  ← shared with "Anyone with the link"
   Frank Sinatra - My Way/
     Frank Sinatra - My Way.txt
     Frank Sinatra - My Way (karaoke).mp3
@@ -65,7 +65,7 @@ The `?drive=` parameter also works on the published site, to try another folder 
 4. The http server's folder listing, if there is one.
 
 The first one that has songs is used, and the demo songs included in the app always stay at the end of the list
-(under «Examples»). «Load song folder» always works.
+(under "Examples"). "Load song folder" always works.
 
 ## Notes
 

@@ -1,12 +1,11 @@
-// App state: a single object S with the settings, the current song, playback, what the camera reads and
-// what is sounding. Every module reads and writes S. It also stores the settings in the browser and shows notices.
+// Shared state (S), saved settings and the toast.
 
 import { DEMO_SONG, DEMO_SONG_EN } from './songs/demo-songs.js';
 import { DEFAULTS, STORE_KEY } from './config.js';
 import { CLASSES } from './logic/common.js';
 import { defaultModel } from './logic/vowels.js';
 
-// ---------------- Estado ----------------
+// ---------------- State ----------------
 export const $ = (id) => document.getElementById(id);
 // Demo songs included in the app: they stay in the list after other songs are loaded.
 export const DEMO_SONGS = [
@@ -41,7 +40,7 @@ export function loadStore() {
 }
 // Saves the settings and the vowel model in the browser.
 export function saveStore() {
-  try { localStorage.setItem(STORE_KEY, JSON.stringify({ settings: S.settings, model: S.model })); } catch (e) { /* ignorar */ }
+  try { localStorage.setItem(STORE_KEY, JSON.stringify({ settings: S.settings, model: S.model })); } catch (e) { /* ignore */ }
 }
 
 export let toastTimer = 0;

@@ -1,7 +1,5 @@
-// Calibrates the gain of the recorded consonants so they sound at the same level as the synthetic ones (already calibrated
-// against the dataset). Measures each consonant before a, i and u, with every fragment, and writes SMP_GAIN into
-// js/voice/cantor-dsp.js.
-// Usage: node tests/calibrate-samples.mjs
+// Matches the level of the recorded consonants to the synthetic ones and writes SMP_GAIN into
+// js/voice/cantor-dsp.js. Usage: node tests/calibrate-samples.mjs
 import fs from 'fs';
 import { planOnset } from '../js/logic/articulation.js';
 import { CantorDSP } from '../js/voice/cantor-dsp.js';

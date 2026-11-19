@@ -1,6 +1,5 @@
-// Reading the vowel from the mouth shape. Each video frame gives 7 features; each vowel (and the mouth at
-// rest) is a «template» with those 7 values. Calibration replaces the templates with the person's own; the
-// classification compares the frame with the templates and gives a probability per class. No DOM.
+// Vowel classifier: compares the 7 mouth features of each frame with a template per vowel
+// (default or calibrated) and returns a probability per class.
 
 import { clamp, CLASSES, NEIGHBORS, VOWELS } from './common.js';
 

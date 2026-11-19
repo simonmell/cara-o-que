@@ -1,5 +1,4 @@
-// Decoding of the recorded consonants: the JSON stores each fragment as 16-bit PCM in base64 with its
-// scale factor; here it is turned into Float32Array. Used by the page and by the Node tools (tests and render).
+// Decodes the recorded consonants (16-bit PCM in base64) into Float32Arrays.
 
 // raw: the contents of data/consonant-samples.json. Returns { fs, sets, transfer } (transfer: the buffers to
 // hand to the AudioWorklet without copying them).

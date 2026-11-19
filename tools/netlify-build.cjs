@@ -1,7 +1,6 @@
 #!/usr/bin/env node
-// Build step for Netlify (see netlify.toml): writes drive-config.js with the Google Drive key and folder taken from
-// the site's environment variables DRIVE_API_KEY and DRIVE_FOLDER_ID, so the key never has to be in the repository.
-// Without those variables it writes nothing and the site uses only the songs that come with it.
+// Netlify build step: writes drive-config.js from the DRIVE_API_KEY and DRIVE_FOLDER_ID environment
+// variables, so the key is not in the repo.
 'use strict';
 const fs = require('fs');
 const path = require('path');

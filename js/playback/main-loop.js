@@ -1,6 +1,4 @@
-// Main loop: runs on every screen frame (about 60 times per second). Reads the face, advances the
-// song, combines the push-button and the camera, computes note and volume, fires consonants, updates the voice, scores the
-// note and draws. When the song ends it shows the summary.
+// Per-frame loop: face -> note and volume -> voice, consonants, score and drawing.
 
 import { beginSetPosition, cal, collectPosition, posSamples, tickCalibration } from '../camera/calibration.js';
 import { readFace } from '../camera/camera.js';

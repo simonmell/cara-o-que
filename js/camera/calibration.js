@@ -1,5 +1,4 @@
-// Starting position (height and size of the face at rest) and guided vowel calibration: six steps in
-// which the person's mouth features are recorded to replace the default templates.
+// Starting position and the six-step vowel calibration.
 
 import { setStatus } from './camera.js';
 import { $, S, saveStore, toast } from '../state.js';
@@ -26,7 +25,7 @@ export function collectPosition(now) {
 }
 
 // Guided vowel calibration
-export const CAL_STEPS = ['rest', 'a', 'e', 'i', 'o', 'u'].map((c) => ({ c }));   // texts: MSG «cal.<vowel>»
+export const CAL_STEPS = ['rest', 'a', 'e', 'i', 'o', 'u'].map((c) => ({ c }));   // texts: MSG "cal.<vowel>"
 export let cal = null;
 // Opens the calibration panel and starts with the first step (mouth at rest).
 export function startCalibration() {

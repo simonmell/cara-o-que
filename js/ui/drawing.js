@@ -1,5 +1,4 @@
-// Screen drawing: the note lane, what is drawn over the camera image (mouth, pitch scale,
-// volume), the vowel bars, the reference mouth, the lyrics and the score.
+// Everything drawn on screen: note lane, camera overlay, vowel bars, lyrics and score.
 
 import { LIP_INNER, LIP_OUTER } from '../camera/camera.js';
 import { argmaxVowel } from '../playback/main-loop.js';
@@ -55,7 +54,7 @@ export function draw(expected, tgtIdx) {
   const nowMs = performance.now();
   if (S.settings.showScore && S.song && nowMs - lastScoreAt > 250) { lastScoreAt = nowMs; updateScore(); }
 }
-// Note lane: bars for each note (colored by vowel), the «now» line and the trail of what was sung.
+// Note lane: bars for each note (colored by vowel), the "now" line and the trail of what was sung.
 export function drawLane(tgtIdx) {
   const { w, h } = fitCanvas(lane, lctx);
   const song = S.song;

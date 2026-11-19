@@ -1,5 +1,4 @@
-// Player: start, pause, go to any moment (timeline, ±5 s, skip intro) and the label of the
-// main button.
+// Play / pause / seek and the main button label.
 
 import { resetPlayback } from '../songs/current-song.js';
 import { resetArticulation } from './consonant-timing.js';
@@ -9,7 +8,7 @@ import { renderLyrics, updateScore } from '../ui/drawing.js';
 import { clamp } from '../logic/common.js';
 import { ensureAudio, voice } from '../voice/audio-engine.js';
 
-// ms → «m:ss».
+// ms → "m:ss".
 export const fmtTime = (ms) => { const s = Math.max(0, Math.floor(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`; };
 // Total duration in ms: the length of the music or, without music, the last note plus 2 s.
 export function songDuration() {
@@ -80,5 +79,5 @@ export function pause() {
   setPlayLabel();
 }
 
-// Text of the main button: «Start», «Pause» or «Resume».
+// Text of the main button: "Start", "Pause" or "Resume".
 export function setPlayLabel() { $('playBtn').textContent = t(S.playing ? 'pause' : S.t > 0 && !S.ended ? 'resume' : 'start'); }

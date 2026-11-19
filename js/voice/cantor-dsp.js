@@ -3,7 +3,7 @@
 // ISC license; Copyright (c) 2026 Edward Browncross, full notice in the README), with a consonant branch
 // inspired by Digitartic.
 // It does not use the DOM. The same file serves two purposes:
-//   - in the page, it is loaded as an AudioWorklet module (js/voice/audio-engine.js) and registers the «cantor-voice» processor;
+//   - in the page, it is loaded as an AudioWorklet module (js/voice/audio-engine.js) and registers the "cantor-voice" processor;
 //   - in Node (tests and tools/render.mjs) it is imported and the CantorDSP class is used directly.
 
 // Cantor Digitalis formants (table 3 of the paper, tenor voice). /e/ and /o/ are moved closer to the Spanish means.
@@ -14,10 +14,10 @@ const CD_VOWELS = {
   o: { F: [470, 800, 2300, 2860, 3900], A: [-5, -1, -10, -6, -28], B: [10, 12, 20, 30, 40] },
   u: { F: [290, 750, 2300, 3080, 3900], A: [-6, -8, -13, -8, -9], B: [10, 10, 20, 30, 40] },
 };
-// Spanish vowels sung by a lyric soprano: Barrientos Sandoval and Cataldo Ferreira, «Synthesis of Sung
-// Spanish Vowels in Lyrical Singing by Sopranos», IEEE Latin America Transactions 19(12), 2021, tables IV and V.
+// Spanish vowels sung by a lyric soprano: Barrientos Sandoval and Cataldo Ferreira, "Synthesis of Sung
+// Spanish Vowels in Lyrical Singing by Sopranos", IEEE Latin America Transactions 19(12), 2021, tables IV and V.
 // Each vowel was measured on a single note (a and o on A4, e on E5, i and u on C5). Frequencies are divided by the
-// engine's scaling (αS with S = 0.44, «small tract», and K(f0) of the measured note), so with a small tract and on that note
+// engine's scaling (αS with S = 0.44, "small tract", and K(f0) of the measured note), so with a small tract and on that note
 // the original measurements come out. Bandwidths are capped at 600 Hz (the paper gives up to 2153 Hz, which wipes out the
 // formant). Amplitudes are not in the paper: Cantor Digitalis's are used.
 const ES_SOPRANO = {
@@ -28,13 +28,13 @@ const ES_SOPRANO = {
   u: { F: [406, 854, 2507, 3044, 4765], A: CD_VOWELS.u.A, B: [23, 116, 62, 198, 87] },
 };
 const ES_SOPRANO_F0 = { a: 435, e: 646, i: 515, o: 435, u: 513 };   // note on which each vowel was measured
-// The measurements are from high notes and already include the «aggiustamento» (the vowel opens to sing high): /e/ with an F1 of
+// The measurements are from high notes and already include the "aggiustamento" (the vowel opens to sing high): /e/ with an F1 of
 // 1091 Hz, /o/ with an F2 above that of /a/. Used as-is on low notes, /e/ sounds like /a/ and /i/ like /e/. That is why the
-// «soprano» set goes from the Cantor Digitalis vowels (below 300 Hz, D4) to the soprano's measurements at the
+// "soprano" set goes from the Cantor Digitalis vowels (below 300 Hz, D4) to the soprano's measurements at the
 // note where they were taken, and stays with them above it.
 const ES_BLEND_LO = 300;
-// American English vowels: averages from Hillenbrand, Getty, Clark and Wheeler, «Acoustic characteristics of American
-// English vowels», JASA 97(5), 1995 (45 men and 48 women, formants in the steady state; original data at
+// American English vowels: averages from Hillenbrand, Getty, Clark and Wheeler, "Acoustic characteristics of American
+// English vowels", JASA 97(5), 1995 (45 men and 48 women, formants in the steady state; original data at
 // github.com/santiagobarreda/hillenbrand_et_al_1995). ARPAbet keys as in the CMU Pronouncing Dictionary; EY and OW are the
 // onset of the diphthongs [eɪ] [oʊ] and AX is the unstressed [ə] (not in the study: a central value). F5 = 1.12·F4.
 // Amplitudes and bandwidths: those of the closest Cantor Digitalis vowel. a e i o u = aliases for the families that
@@ -335,7 +335,7 @@ class CantorDSP {
     // Effective formants: locus transitions and nasalization of the consonant in progress
     const Fe = this.F.slice(), Ae = this.A.slice(), Be = this.B.slice();
     if (lmix > 1e-4) {
-      // Locus F2: locus equation applied to the vowel F2 (c scales with the tract); otherwise fixed or «velar»
+      // Locus F2: locus equation applied to the vowel F2 (c scales with the tract); otherwise fixed or "velar"
       const scl = (1.7 * this.vp.S + 0.5) * (1.25e-4 * this.f0 + 0.975);
       const F2loc = lk > 0 ? lk * this.F[1] + lc * scl : F2L > 0 ? F2L : (Fe[1] < 1400 ? 1300 : Math.min(2400, Fe[1] * 1.1));
       const L = [F1L, F2loc, F3L > 0 ? F3L : Math.max(2200, Fe[1] * 1.15)];
@@ -444,7 +444,7 @@ class CantorDSP {
 
 // ---------- Using this file ----------
 // In the browser, this file is loaded as an AudioWorklet module (see js/voice/audio-engine.js) and registers the
-// «cantor-voice» processor, which generates the sound sample by sample on the audio thread. In Node (tests and render)
+// "cantor-voice" processor, which generates the sound sample by sample on the audio thread. In Node (tests and render)
 // registerProcessor does not exist: CantorDSP is imported directly.
 // AudioWorklet processor: it only exists inside the audio thread (in Node, registerProcessor is not defined).
 // Each 128-sample block is computed by CantorDSP; the output is mono, copied to every channel.

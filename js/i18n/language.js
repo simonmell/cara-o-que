@@ -1,12 +1,11 @@
-// Interface language (Spanish / English): translation of the page texts and messages, note names
-// by language, and choice of the initial language.
+// Spanish / English switching. The Spanish texts are read from index.html at startup.
 
 import { STORE_KEY } from '../config.js';
 import { HTML_EN, MSG } from './strings.js';
 import { noteName } from '../logic/common.js';
 
 // The fixed texts of the page are written in Spanish in the HTML and marked with data-t (content), data-t-title and
-// data-t-aria (attributes). At startup those texts are stored as the «es» version; HTML_EN holds the English version.
+// data-t-aria (attributes). At startup those texts are stored as the "es" version; HTML_EN holds the English version.
 // Texts built by the code come from MSG through t(key, ...data).
 export const LANG_KEY = STORE_KEY + ':lang';
 export const NOTE_NAMES_EN = ['C', 'C♯', 'D', 'D♯', 'E', 'F', 'F♯', 'G', 'G♯', 'A', 'A♯', 'B'];
@@ -28,7 +27,7 @@ export function captureSpanish() {
 }
 // Initial language: the one chosen before or, the first time, the browser's.
 export function initialLang() {
-  try { const l = localStorage.getItem(LANG_KEY); if (l === 'es' || l === 'en') return l; } catch (e) { /* ignorar */ }
+  try { const l = localStorage.getItem(LANG_KEY); if (l === 'es' || l === 'en') return l; } catch (e) { /* ignore */ }
   const nav = (navigator.languages && navigator.languages[0]) || navigator.language || 'es';
   return /^es\b/i.test(nav) ? 'es' : 'en';
 }
@@ -44,7 +43,7 @@ export function setLang(lang, save) {
   }
   for (const b of document.querySelectorAll('.langbtn')) b.setAttribute('aria-pressed', String(b.dataset.lang === LANG));
   for (const f of langHooks) f();
-  if (save) { try { localStorage.setItem(LANG_KEY, LANG); } catch (e) { /* ignorar */ } }
+  if (save) { try { localStorage.setItem(LANG_KEY, LANG); } catch (e) { /* ignore */ } }
 }
 
 // At startup: the language chosen last time or, if there is none, the browser's

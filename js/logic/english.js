@@ -1,7 +1,6 @@
-// English songs: words → phonemes (CMU Pronouncing Dictionary) → syllables → UltraStar notes, and how
-// to combine the vowel family the camera reads with the exact English vowel. No DOM.
+// English songs: CMU dictionary -> syllables -> notes, and mapping the vowel family the camera reads
+// to the exact English vowel. No DOM.
 
-// ---------- English: words → phonemes (CMU Pronouncing Dictionary) → syllables → UltraStar notes (no DOM) ----------
 // The dictionary gives each word in ARPAbet with stress (TWINKLE → T W IH1 NG K AH0 L). Here it is split into syllables,
 // distributed among the notes that make up the word in the UltraStar file and translated into what the engine understands:
 // the vowel family the camera reads (a e i o u), the exact English vowel (with diphthong) and the consonants.
@@ -54,7 +53,7 @@ export function syllabifyArpabet(pron) {
   return syl;
 }
 
-// One dictionary syllable → what the engine uses. prevSyl: the previous syllable of the same word (for the flapped «t»).
+// One dictionary syllable → what the engine uses. prevSyl: the previous syllable of the same word (for the flapped "t").
 export function sylToEngine(sy, prevSyl, wordStart) {
   let nuc = sy.nuc;
   if (nuc === 'AH' && sy.stress === 0) nuc = 'AX';   // the unstressed vowel is reduced to [ə]
@@ -62,14 +61,14 @@ export function sylToEngine(sy, prevSyl, wordStart) {
   const onset = sy.onset.map((c, i) => {
     if (ASPIRATED[c] && i === 0 && (wordStart || sy.stress > 0)) return ASPIRATED[c];   // p t k aspirated at the start
     if ((c === 'T' || c === 'D') && i === 0 && sy.onset.length === 1 && !wordStart && sy.stress === 0
-        && prevSyl && !prevSyl.coda.length) return 'r';                                  // «water», «little»: golpe [ɾ]
+        && prevSyl && !prevSyl.coda.length) return 'r';                                  // "water", "little": flap [ɾ]
     return EN_CONS[c];
   }).filter(Boolean);
   const coda = sy.coda.map((c) => (c === 'L' ? 'ɫ' : EN_CONS[c])).filter(Boolean);       // l final oscura
   return { fam: V.fam, ipa: V.ipa, v1: V.v1, v2: V.v2 || null, stress: sy.stress, onset, coda };
 }
 
-// Several syllables on a single note («fire» on one note, «of the» on one note): the most stressed one stays; the vowel of the
+// Several syllables on a single note ("fire" on one note, "of the" on one note): the most stressed one stays; the vowel of the
 // next syllable becomes the glide target and its consonants are added to the coda.
 export function mergeSyls(list) {
   if (list.length === 1) return { ...list[0] };
@@ -79,7 +78,7 @@ export function mergeSyls(list) {
   for (let i = 0; i < m; i++) main.onset = [...main.onset, ...list[i].onset, ...list[i].coda];
   for (let i = m + 1; i < list.length; i++) {
     if (!main.v2 && !main.coda.length) { main.v2 = list[i].v1; main.ipa += list[i].ipa; }
-    else if (list[i].v1 === 'ER') main.coda.push('ɹ');               // «fire», «hour» on one note: the final r stays
+    else if (list[i].v1 === 'ER') main.coda.push('ɹ');               // "fire", "hour" on one note: the final r stays
     main.coda.push(...list[i].onset, ...list[i].coda);
   }
   return main;
@@ -94,7 +93,7 @@ export function pickCoda(coda) {
   return [coda[0]];
 }
 
-// Groups the text pieces of the notes into words. Returns [{word, parts: [{i, len}]}]; «~» notes (melisma) add no
+// Groups the text pieces of the notes into words. Returns [{word, parts: [{i, len}]}]; "~" notes (melisma) add no
 // letters and keep the previous vowel.
 export function englishWords(notes) {
   const words = [];
@@ -162,7 +161,7 @@ export function annotateEnglish(notes, dict, fallback) {
     }
     const syls = syllabifyArpabet(pron);
     const eng = syls.map((s, k) => sylToEngine(s, syls[k - 1], k === 0));
-    // a note may hold pieces of several words («of the»): their syllables are merged
+    // a note may hold pieces of several words ("of the"): their syllables are merged
     const groups = distribute(eng, w.parts);
     w.parts.forEach((p, k) => {
       const list = groups[k];
@@ -172,7 +171,7 @@ export function annotateEnglish(notes, dict, fallback) {
       n.en = { ...m, cont: false, unknown: false };
     });
   }
-  // notes without their own syllable (melismas «~» or word parts left empty): keep the previous vowel;
+  // notes without their own syllable (melismas "~" or word parts left empty): keep the previous vowel;
   // the diphthong glides only on the last note of the group
   let last = null;
   notes.forEach((n, i) => {

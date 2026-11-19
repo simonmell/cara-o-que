@@ -13,6 +13,5 @@
   },
   "engines": {
     "node": ">=18"
-  },
-  "comment": "The server (tools/server.cjs) works from Node 6 on; the tests and tools need Node 18 or newer."
+  }
 }
