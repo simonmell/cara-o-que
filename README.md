@@ -9,6 +9,8 @@ The webcam reads the shape of your mouth (vowel), the height of your head (note)
 
 ![Cara-o-que playing «Twinkle, Twinkle, Little Star»](docs/screenshot.png)
 
+**Try it online: https://cara-o-que.netlify.app/** (Chrome or Edge, with a webcam, or with the space bar if you don't have one).
+
 Cara-o-que is part of **Archivoz**, a research project on a voice map of Argentine regional accents and on speech synthesis for laryngectomized people. It is a working prototype: it is meant to be tried with real users and improved from there.
 
 ## Features
@@ -99,7 +101,7 @@ node tools/render.mjs catalog audio/consonant-catalog.wav
 
 `tools/render.mjs` renders songs to WAV without a browser, using the same engine and consonant rules as the app; it is handy to listen to a change before trying it with the camera. Edit a file and reload the page: the local server does not cache anything.
 
-To publish a version other people can open from their own computers, connect the repository to Netlify (`netlify.toml` is included) and, for the songs, a Google Drive folder ([docs/google-drive.md](docs/google-drive.md)). Another option is `Build web version.bat`, which creates `web-version/` with your local songs, ready to upload to any static host with https ([docs/publishing.md](docs/publishing.md)).
+The online version at https://cara-o-que.netlify.app/ is this same repository published on Netlify: every push to `main` updates it, and it reads the songs from a shared Google Drive folder, so adding a song doesn't need a new deploy. How I set up the Drive folder is in [docs/google-drive.md](docs/google-drive.md). If you'd rather not use Netlify, `Build web version.bat` makes a `web-version/` folder with the local songs that you can upload to any site with https ([docs/publishing.md](docs/publishing.md)).
 
 ## Documentation
 
