@@ -134,7 +134,15 @@ const driveKey = () => driveConfig().apiKey || DRIVE_API_KEY;
 export function driveFolderId() {
   const p = new URLSearchParams(location.search).get('drive');
   const id = p || driveConfig().folderId || DRIVE_FOLDER_ID;
-  return (/folders\/([\w-]+)/.exec(id) || [null, id])[1];
+  // accepts the bare ID, «ID?usp=sharing», a …/folders/ID link or an …?id=ID link
+  const link = /(?:folders\/|[?&]id=)([\w-]+)/.exec(id);
+  return link ? link[1] : (/[\w-]{10,}/.exec(id) || [id.trim()])[0];
+}
+// Error from the Drive API with Google's own explanation (for example, «Requests from referer ... are blocked»).
+async function driveError(r) {
+  let msg = '';
+  try { msg = (await r.json()).error.message; } catch { /* no JSON body */ }
+  return new Error(`Drive ${r.status}${msg ? ': ' + msg : ''}`);
 }
 // All the items of a Drive folder (the API returns them in pages of up to 1000).
 async function driveList(folderId, key) {
@@ -143,7 +151,7 @@ async function driveList(folderId, key) {
   do {
     const q = encodeURIComponent(`'${folderId}' in parents and trashed = false`);
     const url = `${DRIVE_API}?q=${q}&fields=nextPageToken,files(id,name,mimeType,size)&pageSize=1000&key=${key}` + (page ? `&pageToken=${page}` : '');
-    const r = await fetch(url); if (!r.ok) throw new Error(`Drive ${r.status}`);
+    const r = await fetch(url); if (!r.ok) throw await driveError(r);
     const j = await r.json();
     items.push(...j.files); page = j.nextPageToken || '';
   } while (page);
@@ -156,7 +164,7 @@ export async function fromDrive(folderId, key) {
     name: dir || 'Google Drive', dir, loose: !dir,
     files: files.filter((f) => f.mimeType !== FOLDER_MIME).map((f) => ({
       name: f.name, size: Number(f.size) || 0, src: media(f),
-      read: async () => { const r = await fetch(media(f)); if (!r.ok) throw new Error(`Drive ${r.status}`); return r.arrayBuffer(); },
+      read: async () => { const r = await fetch(media(f)); if (!r.ok) throw await driveError(r); return r.arrayBuffer(); },
     })),
   });
   const top = await driveList(folderId, key);
@@ -189,7 +197,7 @@ export function wireSongLibrary() {
     try {
       toast(t('reading'));
       return await loadSongFolders(await fromDrive(id, key));
-    } catch (err) { console.warn('Google Drive', err); toast(t('driveFail')); return false; }
+    } catch (err) { console.warn('Google Drive', err); toast(t('driveFail') + ' (' + err.message + ')'); return false; }
   };
   (async () => {
     // a folder given in the address (?drive=...) comes first; one set in config.js only if there is no local list
