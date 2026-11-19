@@ -157,6 +157,8 @@ async function driveList(folderId, key) {
   } while (page);
   return items;
 }
+// Last error while downloading a file from Drive (loadSongFolders skips unreadable files silently)
+let driveReadError = null;
 // Builds the song folders from Drive. The audio plays straight from Drive (the API supports byte ranges, so seeking works).
 export async function fromDrive(folderId, key) {
   const media = (f) => `${DRIVE_API}/${f.id}?alt=media&key=${key}`;
@@ -164,7 +166,12 @@ export async function fromDrive(folderId, key) {
     name: dir || 'Google Drive', dir, loose: !dir,
     files: files.filter((f) => f.mimeType !== FOLDER_MIME).map((f) => ({
       name: f.name, size: Number(f.size) || 0, src: media(f),
-      read: async () => { const r = await fetch(media(f)); if (!r.ok) throw await driveError(r); return r.arrayBuffer(); },
+      read: async () => {
+        try {
+          const r = await fetch(media(f)); if (!r.ok) throw await driveError(r);
+          return await r.arrayBuffer();
+        } catch (err) { driveReadError = err; console.warn('Google Drive', f.name, err); throw err; }
+      },
     })),
   });
   const top = await driveList(folderId, key);
@@ -196,7 +203,11 @@ export function wireSongLibrary() {
     if (!id || !key) return false;
     try {
       toast(t('reading'));
-      return await loadSongFolders(await fromDrive(id, key));
+      driveReadError = null;
+      if (await loadSongFolders(await fromDrive(id, key), { quiet: true })) return true;
+      // the folder was listed but no song could be read: say why
+      toast(driveReadError ? t('driveFail') + ' (' + driveReadError.message + ')' : t('noSongs'));
+      return false;
     } catch (err) { console.warn('Google Drive', err); toast(t('driveFail') + ' (' + err.message + ')'); return false; }
   };
   (async () => {
